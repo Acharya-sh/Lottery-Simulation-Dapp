@@ -1,0 +1,1335 @@
+/* ================================
+   DASHBOARD
+================================ */
+
+.dashboard {
+  width: 100%;
+  min-height: 100%;
+
+  padding: 48px 54px 70px;
+
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(212, 169, 38, 0.035),
+      transparent 30%
+    ),
+    #050505;
+
+  box-sizing: border-box;
+}
+
+
+/* ================================
+   WELCOME
+================================ */
+
+.dashboard-welcome {
+  margin-bottom: 32px;
+}
+
+.dashboard-welcome h2 {
+  margin: 0 0 8px;
+
+  font-size: 42px;
+  line-height: 1.15;
+
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #eeeeee 25%,
+    #bdbdbd 50%,
+    #f7f7f7 72%,
+    #9e9e9e 100%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  font-weight: 700;
+}
+
+.dashboard-welcome h2 span {
+  color: #e1b52a;
+
+  background: none;
+
+  -webkit-text-fill-color: #e1b52a;
+}
+
+.dashboard-welcome p {
+  margin: 0;
+
+  color: #a7a7a7;
+
+  font-size: 17px;
+}
+
+
+/* ================================
+   SEARCH + CATEGORY
+================================ */
+
+.dashboard-search-row {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr) 240px;
+
+  gap: 16px;
+
+  margin-bottom: 42px;
+}
+
+.search-wrapper,
+.select-wrapper {
+  position: relative;
+}
+
+.search-wrapper {
+  width: 100%;
+}
+
+.search-wrapper input {
+  width: 100%;
+  height: 60px;
+
+  box-sizing: border-box;
+
+  padding: 0 20px 0 58px;
+
+  border: 1px solid #252525;
+  border-radius: 12px;
+
+  background: #080808;
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition: border-color 0.2s ease;
+}
+
+.search-wrapper input::placeholder {
+  color: #696969;
+}
+
+.search-wrapper input:focus {
+  border-color:
+    rgba(225, 181, 42, 0.6);
+}
+
+.search-icon {
+  position: absolute;
+
+  left: 21px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #e1b52a;
+
+  font-size: 25px;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+
+/* ================================
+   SELECT
+================================ */
+
+.select-wrapper {
+  height: 60px;
+}
+
+.select-wrapper select {
+  width: 100%;
+  height: 100%;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  padding: 0 45px 0 50px;
+
+  border: 1px solid #252525;
+  border-radius: 12px;
+
+  background: #080808;
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.select-wrapper select:focus {
+  border-color:
+    rgba(225, 181, 42, 0.6);
+}
+
+.select-wrapper select option {
+  background: #111111;
+  color: #ffffff;
+}
+
+.select-icon {
+  position: absolute;
+
+  left: 20px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #e1b52a;
+
+  font-size: 22px;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+.select-arrow {
+  position: absolute;
+
+  right: 17px;
+  top: 50%;
+
+  transform: translateY(-52%);
+
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+
+/* ================================
+   LOTTERY SECTION
+================================ */
+
+.lottery-section {
+  width: 100%;
+}
+
+.lottery-heading {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 22px;
+}
+
+.lottery-heading h2 {
+  margin: 0 0 7px;
+
+  font-size: 32px;
+  line-height: 1.2;
+
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #eeeeee 25%,
+    #bdbdbd 50%,
+    #f7f7f7 72%,
+    #9e9e9e 100%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lottery-heading h2 span {
+  color: #e1b52a;
+
+  background: none;
+
+  -webkit-text-fill-color: #e1b52a;
+}
+
+.lottery-heading p {
+  margin: 0;
+
+  color: #a2a2a2;
+
+  font-size: 15px;
+}
+
+
+/* ================================
+   SORT
+================================ */
+
+.sort-wrapper {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  flex-shrink: 0;
+}
+
+.sort-label {
+  color: #a3a3a3;
+
+  font-size: 14px;
+}
+
+.sort-select {
+  width: 190px;
+  height: 48px;
+}
+
+.sort-select select {
+  height: 48px;
+
+  padding-left: 16px;
+  padding-right: 40px;
+
+  border-radius: 10px;
+
+  background-image: none;
+}
+
+
+/* ================================
+   LOTTERY GRID
+================================ */
+
+.lottery-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+
+/* ================================
+   LOTTERY CARD
+================================ */
+
+.lottery-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  background: #090909;
+
+  border: 1px solid #252525;
+
+  border-radius: 14px;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.lottery-card:hover {
+  transform: translateY(-3px);
+
+  border-color:
+    rgba(225, 181, 42, 0.45);
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+
+/* ================================
+   IMAGE
+================================ */
+
+.lottery-image-wrapper {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 16 / 10;
+
+  overflow: hidden;
+
+  background: #101010;
+}
+
+.lottery-image {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.3s ease;
+}
+
+.lottery-card:hover .lottery-image {
+  transform: scale(1.025);
+}
+
+
+/* ================================
+   CATEGORY BADGE
+================================ */
+
+.category-badge {
+  position: absolute;
+
+  top: 13px;
+  left: 13px;
+
+  padding: 6px 11px;
+
+  border: 1px solid #d4a719;
+
+  border-radius: 7px;
+
+  background: rgba(8, 8, 8, 0.88);
+
+  color: #e6b91e;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  z-index: 2;
+}
+
+
+/* ================================
+   CARD BODY
+================================ */
+
+.lottery-card-body {
+  padding: 17px 16px 16px;
+}
+
+.lottery-card-body h3 {
+  margin: 0 0 7px;
+
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+.lottery-description {
+  margin: 0;
+
+  min-height: 39px;
+
+  color: #999999;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* ================================
+   INFO
+================================ */
+
+.lottery-info {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 10px;
+
+  margin-top: 17px;
+}
+
+.info-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-width: 0;
+}
+
+.info-item > span {
+  color: #e4b623;
+
+  font-size: 15px;
+
+  flex-shrink: 0;
+}
+
+.info-item div {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.info-item strong {
+  color: #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.info-item small {
+  margin-top: 3px;
+
+  color: #777777;
+
+  font-size: 10px;
+
+  white-space: nowrap;
+}
+
+
+/* ================================
+   PROGRESS
+================================ */
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+
+  margin-top: 17px;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: #242424;
+}
+
+.progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #13e68a;
+
+  transition:
+    width 0.3s ease;
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
+.lottery-footer {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  margin-top: 17px;
+}
+
+.time-left {
+  color: #c8c8c8;
+
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+.view-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 38px;
+
+  padding: 0 13px;
+
+  border: 1px solid #e1b52a;
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: #e1b52a;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+  white-space: nowrap;
+}
+
+.view-btn:hover {
+  background: #e1b52a;
+
+  color: #050505;
+}
+
+.view-btn span {
+  font-size: 16px;
+}
+
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-state {
+  width: 100%;
+
+  padding: 70px 20px;
+
+  text-align: center;
+
+  border: 1px solid #222222;
+
+  border-radius: 14px;
+
+  background: #090909;
+}
+
+.empty-icon {
+  margin-bottom: 15px;
+
+  color: #d9ae20;
+
+  font-size: 35px;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+
+  color: #ffffff;
+
+  font-size: 20px;
+}
+
+.empty-state p {
+  margin: 0;
+
+  color: #777777;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   LOTTERY DETAILS MODAL
+========================================================= */
+
+.lottery-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  z-index: 3000;
+
+  overflow-y: auto;
+
+  animation:
+    modal-overlay-open 0.2s ease;
+}
+
+
+/* ================================
+   MODAL ANIMATION
+================================ */
+
+@keyframes modal-overlay-open {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+
+/* ================================
+   MODAL BOX
+================================ */
+
+.lottery-modal {
+  position: relative;
+
+  width: min(760px, 100%);
+
+  max-height: calc(100vh - 60px);
+
+  overflow-y: auto;
+
+  background: #0a0a0a;
+
+  border: 1px solid rgba(225, 181, 42, 0.35);
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.75);
+
+  animation:
+    lottery-modal-open 0.22s ease;
+}
+
+
+@keyframes lottery-modal-open {
+
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+
+/* ================================
+   MODAL CLOSE
+================================ */
+
+.lottery-modal-close {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.75);
+
+  color: #ffffff;
+
+  font-size: 27px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  z-index: 10;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.lottery-modal-close:hover {
+  background: #e1b52a;
+
+  border-color: #e1b52a;
+
+  color: #050505;
+}
+
+
+/* ================================
+   MODAL IMAGE
+================================ */
+
+.lottery-modal-image-wrapper {
+  position: relative;
+
+  width: 100%;
+
+  height: 300px;
+
+  overflow: hidden;
+
+  background: #111111;
+}
+
+.lottery-modal-image {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.modal-category-badge {
+  position: absolute;
+
+  top: 18px;
+  left: 18px;
+
+  padding: 7px 13px;
+
+  border: 1px solid #e1b52a;
+
+  border-radius: 8px;
+
+  background: rgba(5, 5, 5, 0.9);
+
+  color: #e1b52a;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* ================================
+   MODAL CONTENT
+================================ */
+
+.lottery-modal-content {
+  padding: 28px 30px 30px;
+}
+
+.lottery-modal-content h2 {
+  margin: 0 0 9px;
+
+  color: #ffffff;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.modal-description {
+  margin: 0;
+
+  color: #9d9d9d;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+
+/* ================================
+   MODAL DETAILS
+================================ */
+
+.modal-details-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin-top: 24px;
+}
+
+.modal-detail {
+  padding: 15px;
+
+  border: 1px solid #242424;
+
+  border-radius: 10px;
+
+  background: #0e0e0e;
+}
+
+.modal-detail span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #777777;
+
+  font-size: 11px;
+}
+
+.modal-detail strong {
+  color: #eeeeee;
+
+  font-size: 14px;
+}
+
+.modal-detail-full {
+  grid-column: 1 / -1;
+}
+
+
+/* ================================
+   MODAL PROGRESS
+================================ */
+
+.modal-progress-section {
+  margin-top: 22px;
+}
+
+.modal-progress-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+}
+
+.modal-progress-header span {
+  color: #8c8c8c;
+
+  font-size: 12px;
+}
+
+.modal-progress-header strong {
+  color: #dddddd;
+
+  font-size: 12px;
+}
+
+.modal-progress {
+  margin-top: 0;
+
+  height: 7px;
+}
+
+
+/* ================================
+   ENTER LOTTERY BUTTON
+================================ */
+
+.enter-lottery-btn {
+  width: 100%;
+
+  height: 52px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #e1b52a;
+
+  color: #050505;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.enter-lottery-btn:hover {
+  background: #f0c63a;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 25px rgba(225, 181, 42, 0.18);
+}
+
+.enter-lottery-btn span {
+  font-size: 18px;
+}
+
+
+/* ================================
+   LARGE LAPTOP
+================================ */
+
+@media (max-width: 1400px) {
+
+  .dashboard {
+    padding: 42px 40px 60px;
+  }
+
+  .lottery-grid {
+    gap: 17px;
+  }
+
+  .lottery-card-body {
+    padding: 15px 14px;
+  }
+
+  .lottery-card-body h3 {
+    font-size: 17px;
+  }
+
+  .lottery-description {
+    font-size: 12px;
+  }
+
+  .view-btn {
+    padding: 0 10px;
+  }
+
+}
+
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 1100px) {
+
+  .dashboard {
+    padding: 38px 30px 55px;
+  }
+
+  .dashboard-welcome h2 {
+    font-size: 36px;
+  }
+
+  .dashboard-search-row {
+    grid-template-columns:
+      minmax(0, 1fr) 210px;
+  }
+
+  .lottery-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+  }
+
+  .lottery-heading h2 {
+    font-size: 28px;
+  }
+
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 767px) {
+
+  .dashboard {
+    padding: 30px 18px 50px;
+  }
+
+
+  .dashboard-welcome {
+    margin-bottom: 25px;
+  }
+
+  .dashboard-welcome h2 {
+    font-size: 31px;
+  }
+
+  .dashboard-welcome p {
+    font-size: 14px;
+
+    line-height: 1.5;
+  }
+
+
+  .dashboard-search-row {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-bottom: 35px;
+  }
+
+
+  .search-wrapper input {
+    height: 54px;
+
+    padding-left: 52px;
+
+    font-size: 13px;
+  }
+
+
+  .select-wrapper {
+    height: 54px;
+  }
+
+  .select-wrapper select {
+    height: 54px;
+
+    font-size: 13px;
+  }
+
+
+  .lottery-heading {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 18px;
+
+    margin-bottom: 20px;
+  }
+
+  .lottery-heading h2 {
+    font-size: 27px;
+  }
+
+  .lottery-heading p {
+    font-size: 13px;
+
+    line-height: 1.5;
+  }
+
+
+  .sort-wrapper {
+    justify-content: flex-end;
+
+    width: 100%;
+  }
+
+  .sort-select {
+    width: 175px;
+  }
+
+
+  .lottery-grid {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+  .lottery-card {
+    width: 100%;
+  }
+
+
+  .lottery-image-wrapper {
+    aspect-ratio: 16 / 9;
+  }
+
+
+  .lottery-card-body {
+    padding: 17px;
+  }
+
+  .lottery-card-body h3 {
+    font-size: 19px;
+  }
+
+  .lottery-description {
+    min-height: auto;
+
+    font-size: 13px;
+  }
+
+
+  .lottery-info {
+    margin-top: 18px;
+  }
+
+  .info-item strong {
+    font-size: 14px;
+  }
+
+
+  .view-btn {
+    min-height: 40px;
+
+    padding: 0 14px;
+
+    font-size: 12px;
+  }
+
+
+  /* Modal */
+
+  .lottery-modal-overlay {
+    align-items: center;
+
+    padding: 16px;
+  }
+
+  .lottery-modal {
+    max-height:
+      calc(100vh - 32px);
+
+    border-radius: 14px;
+  }
+
+  .lottery-modal-image-wrapper {
+    height: 210px;
+  }
+
+  .lottery-modal-content {
+    padding: 22px 18px 20px;
+  }
+
+  .lottery-modal-content h2 {
+    font-size: 23px;
+  }
+
+  .modal-description {
+    font-size: 13px;
+  }
+
+  .modal-details-grid {
+    gap: 9px;
+  }
+
+  .modal-detail {
+    padding: 12px;
+  }
+
+  .enter-lottery-btn {
+    height: 50px;
+  }
+
+}
+
+
+/* ================================
+   SMALL MOBILE
+================================ */
+
+@media (max-width: 480px) {
+
+  .dashboard {
+    padding: 25px 13px 40px;
+  }
+
+  .dashboard-welcome h2 {
+    font-size: 28px;
+  }
+
+  .dashboard-welcome p {
+    font-size: 13px;
+  }
+
+  .search-wrapper input {
+    font-size: 12px;
+  }
+
+  .lottery-heading h2 {
+    font-size: 25px;
+  }
+
+  .sort-wrapper {
+    justify-content: space-between;
+  }
+
+  .sort-label {
+    font-size: 13px;
+  }
+
+  .sort-select {
+    width: 165px;
+  }
+
+  .lottery-card-body {
+    padding: 15px;
+  }
+
+  .lottery-footer {
+    gap: 10px;
+  }
+
+  .view-btn {
+    padding: 0 12px;
+  }
+
+
+  /* Modal */
+
+  .lottery-modal-overlay {
+    padding: 10px;
+  }
+
+  .lottery-modal {
+    max-height:
+      calc(100vh - 20px);
+  }
+
+  .lottery-modal-image-wrapper {
+    height: 175px;
+  }
+
+  .lottery-modal-close {
+    width: 36px;
+    height: 36px;
+
+    top: 10px;
+    right: 10px;
+
+    font-size: 24px;
+  }
+
+  .lottery-modal-content {
+    padding: 19px 14px 16px;
+  }
+
+  .lottery-modal-content h2 {
+    font-size: 21px;
+  }
+
+  .modal-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-detail-full {
+    grid-column: auto;
+  }
+
+}

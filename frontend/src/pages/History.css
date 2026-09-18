@@ -1,0 +1,949 @@
+/* =========================================
+   HISTORY PAGE
+========================================= */
+
+.history-page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 42px 56px 70px;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+
+.history-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+
+  margin-bottom: 28px;
+}
+
+.history-heading h2 {
+  margin: 0;
+
+  font-size: clamp(30px, 3vw, 40px);
+  line-height: 1.15;
+  font-weight: 700;
+
+  color: #eeeeee;
+
+  letter-spacing: -0.5px;
+}
+
+.history-heading h2 span {
+  color: #d4af37;
+}
+
+.history-heading p {
+  margin: 9px 0 0;
+
+  color: #858585;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.history-count {
+  color: #d4af37;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+
+
+/* =========================================
+   SUMMARY CARDS
+========================================= */
+
+.history-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+
+  margin-bottom: 28px;
+}
+
+.history-stat {
+  min-width: 0;
+
+  padding: 22px 22px 20px;
+
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18, 18, 18, 0.98),
+      rgba(8, 8, 8, 0.98)
+    );
+
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.25);
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.history-stat:hover {
+  border-color: rgba(212, 175, 55, 0.38);
+  transform: translateY(-2px);
+}
+
+.history-stat span {
+  display: block;
+
+  color: #8a8a8a;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.history-stat strong {
+  display: block;
+
+  margin-top: 9px;
+
+  color: #d4af37;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.history-stat small {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #626262;
+  font-size: 11px;
+}
+
+
+/* =========================================
+   CONTROLS
+========================================= */
+
+.history-controls {
+  display: flex;
+  align-items: stretch;
+
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.history-search {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 16px;
+
+  border: 1px solid #292929;
+  border-radius: 10px;
+
+  background: #080808;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.history-search:focus-within {
+  border-color: rgba(212, 175, 55, 0.65);
+
+  box-shadow:
+    0 0 0 2px rgba(212, 175, 55, 0.05);
+}
+
+.history-search span {
+  flex-shrink: 0;
+
+  color: #d4af37;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.history-search input {
+  width: 100%;
+  min-width: 0;
+
+  padding: 15px 0;
+
+  border: none;
+  outline: none;
+
+  color: #eeeeee;
+  background: transparent;
+
+  font-size: 14px;
+}
+
+.history-search input::placeholder {
+  color: #5e5e5e;
+}
+
+.history-controls select {
+  width: 210px;
+
+  padding: 0 15px;
+
+  border: 1px solid #292929;
+  border-radius: 10px;
+
+  outline: none;
+
+  color: #eeeeee;
+  background: #080808;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.history-controls select:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+}
+
+.history-controls select:focus {
+  border-color: rgba(212, 175, 55, 0.65);
+
+  box-shadow:
+    0 0 0 2px rgba(212, 175, 55, 0.05);
+}
+
+
+/* =========================================
+   TABLE CONTAINER
+========================================= */
+
+.history-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 12px;
+
+  background: #080808;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.25);
+
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a transparent;
+}
+
+.history-table-wrapper::-webkit-scrollbar {
+  height: 7px;
+}
+
+.history-table-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.history-table-wrapper::-webkit-scrollbar-thumb {
+  background: #3f3f3f;
+  border-radius: 10px;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.history-table {
+  width: 100%;
+  min-width: 980px;
+
+  border-collapse: collapse;
+
+  font-size: 13px;
+}
+
+.history-table th {
+  padding: 16px 17px;
+
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+
+  color: #777777;
+  background: #0d0d0d;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-align: left;
+  text-transform: uppercase;
+
+  letter-spacing: 0.6px;
+}
+
+.history-table td {
+  padding: 17px;
+
+  border-bottom: 1px solid #1c1c1c;
+
+  color: #a5a5a5;
+
+  white-space: nowrap;
+}
+
+.history-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.history-table tbody tr:hover {
+  background: rgba(212, 175, 55, 0.025);
+}
+
+.history-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.history-number {
+  color: #555555 !important;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* =========================================
+   LOTTERY CELL
+========================================= */
+
+.history-lottery strong {
+  display: block;
+
+  color: #eeeeee;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.history-lottery span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #666666;
+
+  font-size: 11px;
+}
+
+
+/* =========================================
+   RESULT BADGES
+========================================= */
+
+.result-badge,
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 48px;
+
+  padding: 5px 9px;
+
+  border-radius: 5px;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.35px;
+}
+
+
+/* WON */
+
+.result-badge.won {
+  border: 1px solid #168a60;
+
+  color: #29d995;
+
+  background: rgba(20, 130, 90, 0.10);
+}
+
+
+/* LOST */
+
+.result-badge.lost {
+  border: 1px solid #6a3434;
+
+  color: #d56c6c;
+
+  background: rgba(130, 40, 40, 0.10);
+}
+
+
+/* PENDING */
+
+.result-badge.pending {
+  border: 1px solid #6b5519;
+
+  color: #d4af37;
+
+  background: rgba(212, 175, 55, 0.08);
+}
+
+
+/* =========================================
+   STATUS BADGES
+========================================= */
+
+.status-badge.active {
+  border: 1px solid #166b4e;
+
+  color: #27c88b;
+
+  background: rgba(20, 120, 80, 0.08);
+}
+
+.status-badge.closed {
+  border: 1px solid #3d3d3d;
+
+  color: #999999;
+
+  background: #111111;
+}
+
+
+/* =========================================
+   PRIZE
+========================================= */
+
+.history-prize {
+  color: #dddddd;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   TRANSACTION HASH
+========================================= */
+
+.tx-hash {
+  color: #737373;
+
+  font-family: monospace;
+  font-size: 10px;
+
+  letter-spacing: 0.2px;
+}
+
+
+/* =========================================
+   VIEW BUTTON
+========================================= */
+
+.history-view-button {
+  padding: 7px 12px;
+
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 6px;
+
+  color: #d4af37;
+  background: transparent;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.history-view-button:hover {
+  border-color: #d4af37;
+
+  color: #050505;
+  background: #d4af37;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.history-empty {
+  padding: 75px 20px;
+
+  text-align: center;
+}
+
+.history-empty > div {
+  color: #d4af37;
+
+  font-size: 30px;
+}
+
+.history-empty h3 {
+  margin: 12px 0 0;
+
+  color: #dddddd;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.history-empty p {
+  margin: 7px 0 0;
+
+  color: #666666;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   LOTTERY DETAILS MODAL
+========================================= */
+
+.history-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 3000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  background: rgba(0, 0, 0, 0.78);
+}
+
+
+/* =========================================
+   MODAL BOX
+========================================= */
+
+.history-modal {
+  position: relative;
+
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  padding: 30px;
+
+  border: 1px solid rgba(212, 175, 55, 0.30);
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #121212,
+      #070707
+    );
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.75);
+
+  box-sizing: border-box;
+
+  animation: history-modal-show 0.2s ease;
+}
+
+@keyframes history-modal-show {
+
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+
+/* =========================================
+   MODAL CLOSE
+========================================= */
+
+.history-modal-close {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(212, 175, 55, 0.30);
+  border-radius: 50%;
+
+  color: #eeeeee;
+  background: #0b0b0b;
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.history-modal-close:hover {
+  color: #050505;
+
+  background: #d4af37;
+
+  border-color: #d4af37;
+}
+
+
+/* =========================================
+   MODAL HEADER
+========================================= */
+
+.history-modal-header {
+  padding-right: 45px;
+}
+
+.history-modal-category {
+  display: inline-flex;
+
+  padding: 5px 10px;
+
+  border: 1px solid rgba(212, 175, 55, 0.70);
+  border-radius: 6px;
+
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.05);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.history-modal-header h2 {
+  margin: 13px 0 0;
+
+  color: #eeeeee;
+
+  font-size: 27px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.history-modal-header p {
+  margin: 9px 0 0;
+
+  color: #858585;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   MODAL INFORMATION
+========================================= */
+
+.history-modal-info {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin-top: 24px;
+}
+
+.history-modal-info-item {
+  padding: 14px;
+
+  border: 1px solid #252525;
+  border-radius: 9px;
+
+  background: #0b0b0b;
+}
+
+.history-modal-info-item span {
+  display: block;
+
+  color: #666666;
+
+  font-size: 10px;
+}
+
+.history-modal-info-item strong {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #dddddd;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* MODAL STATUS */
+
+.history-modal-info-item strong.modal-active {
+  color: #27c88b;
+}
+
+.history-modal-info-item strong.modal-closed {
+  color: #999999;
+}
+
+
+/* MODAL RESULT */
+
+.history-modal-info-item strong.modal-won {
+  color: #29d995;
+}
+
+.history-modal-info-item strong.modal-lost {
+  color: #d56c6c;
+}
+
+.history-modal-info-item strong.modal-pending {
+  color: #d4af37;
+}
+
+
+/* =========================================
+   LARGE SCREENS
+========================================= */
+
+@media (min-width: 1600px) {
+
+  .history-page {
+    padding-left: 70px;
+    padding-right: 70px;
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .history-page {
+    padding: 36px 35px 60px;
+  }
+
+  .history-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .history-table {
+    min-width: 950px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+  .history-page {
+    padding: 30px 24px 50px;
+  }
+
+  .history-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .history-count {
+    padding-bottom: 0;
+  }
+
+  .history-summary {
+    gap: 12px;
+  }
+
+  .history-stat {
+    padding: 18px;
+  }
+
+  .history-stat strong {
+    font-size: 27px;
+  }
+
+  .history-controls {
+    flex-direction: column;
+  }
+
+  .history-controls select {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .history-search {
+    min-height: 48px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .history-page {
+    padding: 26px 16px 45px;
+  }
+
+  .history-heading h2 {
+    font-size: 29px;
+  }
+
+  .history-heading p {
+    font-size: 13px;
+  }
+
+  .history-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .history-stat {
+    padding: 16px;
+
+    border-radius: 10px;
+  }
+
+  .history-stat span {
+    font-size: 11px;
+  }
+
+  .history-stat strong {
+    margin-top: 7px;
+
+    font-size: 24px;
+  }
+
+  .history-stat small {
+    font-size: 9px;
+  }
+
+  .history-table-wrapper {
+    border-radius: 10px;
+  }
+
+
+  /* MODAL */
+
+  .history-modal-overlay {
+    padding: 15px;
+  }
+
+  .history-modal {
+    max-height: 92vh;
+
+    padding: 22px;
+
+    border-radius: 12px;
+  }
+
+  .history-modal-header {
+    padding-right: 38px;
+  }
+
+  .history-modal-header h2 {
+    font-size: 22px;
+  }
+
+  .history-modal-header p {
+    font-size: 12px;
+  }
+
+  .history-modal-info {
+    grid-template-columns: 1fr;
+
+    gap: 9px;
+
+    margin-top: 20px;
+  }
+
+  .history-modal-info-item {
+    padding: 12px;
+  }
+
+  .history-modal-close {
+    top: 12px;
+    right: 12px;
+
+    width: 34px;
+    height: 34px;
+
+    font-size: 22px;
+  }
+
+}
+
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .history-page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .history-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .history-heading h2 {
+    font-size: 27px;
+  }
+
+  .history-count {
+    font-size: 12px;
+  }
+
+  .history-modal {
+    padding: 19px;
+  }
+
+}

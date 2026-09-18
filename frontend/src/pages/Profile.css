@@ -1,0 +1,579 @@
+/* =========================================
+   PROFILE / WALLET PAGE
+========================================= */
+
+.profile-page {
+  width: 100%;
+  min-width: 0;
+}
+
+
+/* =========================================
+   PAGE INTRO
+========================================= */
+
+.profile-intro {
+  margin-bottom: 24px;
+}
+
+.profile-intro h2 {
+  color: #f4f4f4;
+
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.15;
+}
+
+.profile-intro h2 span {
+  color: #d4af37;
+}
+
+.profile-intro p {
+  margin-top: 8px;
+
+  color: #9a9a9a;
+
+  font-size: 14px;
+}
+
+
+/* =========================================
+   COMMON WALLET CARD
+========================================= */
+
+.wallet-card {
+  width: 100%;
+  min-width: 0;
+
+  margin-bottom: 18px;
+
+  border: 1px solid #493916;
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #0e0e0e,
+      #070707
+    );
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.28);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.wallet-card:hover {
+  border-color: #705a1d;
+}
+
+
+/* =========================================
+   CONNECTED WALLET
+========================================= */
+
+.connected-wallet {
+  min-height: 140px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+
+  padding: 20px 34px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.connected-wallet::after {
+  content: "";
+
+  position: absolute;
+
+  right: -50px;
+  top: -90px;
+
+  width: 420px;
+  height: 250px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(212, 175, 55, 0.18),
+      transparent 68%
+    );
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   WALLET ICON
+========================================= */
+
+.wallet-icon {
+  position: relative;
+  z-index: 1;
+
+  width: 96px;
+  height: 96px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d4af37;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #151515,
+      #070707
+    );
+
+  box-shadow:
+    0 0 25px rgba(212, 175, 55, 0.08);
+}
+
+.wallet-icon span {
+  font-size: 50px;
+}
+
+
+/* =========================================
+   CONNECTED WALLET CONTENT
+========================================= */
+
+.connected-wallet-info {
+  position: relative;
+  z-index: 1;
+
+  min-width: 0;
+}
+
+.wallet-label,
+.balance-label,
+.info-label {
+  display: block;
+
+  color: #a7a7a7;
+
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+
+.wallet-address-row {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 8px;
+}
+
+.wallet-address-row strong {
+  color: #dedede;
+
+  font-size: clamp(20px, 2vw, 26px);
+
+  overflow-wrap: anywhere;
+}
+
+.copy-small {
+  flex-shrink: 0;
+
+  border: none;
+
+  color: #aaa;
+  background: transparent;
+
+  font-size: 25px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.copy-small:hover {
+  color: #d4af37;
+}
+
+.connected-status {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 8px;
+
+  color: #25e39b;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  background: #25e39b;
+
+  box-shadow:
+    0 0 10px rgba(37, 227, 155, 0.7);
+}
+
+
+/* =========================================
+   BALANCE
+========================================= */
+
+.balance-card {
+  min-height: 112px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 22px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.balance-card::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(212, 175, 55, 0.12),
+      transparent 65%
+    );
+
+  pointer-events: none;
+}
+
+.balance-content {
+  position: relative;
+
+  text-align: center;
+}
+
+.balance-label {
+  text-align: center;
+}
+
+.balance-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  margin-top: 7px;
+}
+
+.eth-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 40px;
+
+  color: #e5b83e;
+
+  font-size: 34px;
+
+  transform: rotate(45deg);
+}
+
+.balance-value strong {
+  color: #f1f1f1;
+
+  font-size: clamp(28px, 3vw, 36px);
+}
+
+
+/* =========================================
+   INFORMATION CARDS
+========================================= */
+
+.info-card {
+  min-height: 104px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 22px 34px;
+}
+
+.info-card strong {
+  margin-top: 7px;
+
+  color: #eeeeee;
+
+  font-size: 26px;
+}
+
+
+/* =========================================
+   ADDRESS CARD
+========================================= */
+
+.address-card {
+  min-height: 100px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 30px;
+}
+
+.address-content {
+  min-width: 0;
+}
+
+.address-content strong {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #eeeeee;
+
+  font-size: 25px;
+
+  overflow-wrap: anywhere;
+}
+
+.copy-button {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  min-width: 145px;
+
+  padding: 13px 20px;
+
+  border: 1px solid #d4af37;
+  border-radius: 18px;
+
+  color: #d4af37;
+
+  background: transparent;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.copy-button:hover {
+  color: #080808;
+
+  background: #d4af37;
+
+  box-shadow:
+    0 0 20px rgba(212, 175, 55, 0.15);
+}
+
+.copy-button.copied {
+  color: #20d994;
+
+  border-color: #20d994;
+}
+
+.copy-button span {
+  font-size: 21px;
+}
+
+
+/* =========================================
+   DISCONNECT
+========================================= */
+
+.disconnect-container {
+  display: flex;
+  justify-content: center;
+
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.disconnect-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  width: min(385px, 100%);
+
+  padding: 14px 22px;
+
+  border: 1px solid #ff4545;
+  border-radius: 20px;
+
+  color: #ff5050;
+
+  background: rgba(100, 0, 0, 0.04);
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.disconnect-button:hover {
+  background: rgba(255, 50, 50, 0.08);
+
+  box-shadow:
+    0 0 22px rgba(255, 50, 50, 0.1);
+}
+
+.disconnect-icon {
+  font-size: 23px;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .connected-wallet {
+    padding: 20px 24px;
+  }
+
+  .info-card {
+    padding: 20px 24px;
+  }
+
+  .address-card {
+    padding: 20px 24px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .profile-intro h2 {
+    font-size: 30px;
+  }
+
+  .profile-intro p {
+    font-size: 13px;
+  }
+
+  .connected-wallet {
+    min-height: auto;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 24px 20px;
+
+    gap: 16px;
+  }
+
+  .wallet-icon {
+    width: 75px;
+    height: 75px;
+  }
+
+  .wallet-icon span {
+    font-size: 38px;
+  }
+
+  .wallet-address-row {
+    max-width: 100%;
+  }
+
+  .wallet-address-row strong {
+    font-size: 20px;
+  }
+
+  .balance-card {
+    min-height: 110px;
+
+    padding: 20px 15px;
+  }
+
+  .balance-value {
+    gap: 8px;
+  }
+
+  .balance-value strong {
+    font-size: 25px;
+  }
+
+  .eth-icon {
+    font-size: 28px;
+  }
+
+  .info-card {
+    min-height: 90px;
+
+    padding: 20px;
+  }
+
+  .info-card strong {
+    font-size: 23px;
+  }
+
+  .address-card {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    padding: 20px;
+  }
+
+  .address-content strong {
+    font-size: 20px;
+  }
+
+  .copy-button {
+    width: 100%;
+  }
+
+  .disconnect-button {
+    width: 100%;
+  }
+}

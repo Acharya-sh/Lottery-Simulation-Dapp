@@ -1,0 +1,977 @@
+/* =========================================================
+   LANDING PAGE
+========================================================= */
+
+.landing-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  background:
+    radial-gradient(
+      circle at 50% 18%,
+      rgba(212, 175, 55, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 50% 55%,
+      rgba(212, 175, 55, 0.035),
+      transparent 45%
+    ),
+    #020202;
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.landing-content {
+  position: relative;
+  z-index: 10;
+
+  width: min(1100px, calc(100% - 40px));
+
+  margin: 0 auto;
+
+  padding:
+    clamp(35px, 5vw, 65px)
+    0
+    clamp(55px, 7vw, 90px);
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.landing-logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: clamp(10px, 1.5vw, 18px);
+}
+
+.landing-logo {
+  display: block;
+
+  width: clamp(125px, 13vw, 190px);
+  height: auto;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 0 12px rgba(212, 175, 55, 0.18))
+    drop-shadow(0 0 30px rgba(212, 175, 55, 0.08));
+}
+
+
+/* =========================================================
+   MAIN TITLE
+========================================================= */
+
+.landing-title {
+  margin: 0;
+
+  color: #f5f5f5;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(38px, 5vw, 72px);
+  font-weight: 700;
+
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+
+  text-wrap: balance;
+
+  text-shadow:
+    /* 0 2px 12px rgba(255, 255, 255, 0.08), */
+    0 0 2px rgba(255, 255, 255, 0.8),
+    0 0 6px rgba(255, 255, 255, 0.18);
+}
+
+.landing-title span {
+  color: #e5b936;
+
+  text-shadow:
+    0 0 12px rgba(229, 185, 54, 0.35),
+    0 0 25px rgba(229, 185, 54, 0.12);
+}
+
+
+/* =========================================================
+   TAGLINE
+========================================================= */
+
+.landing-tagline {
+  margin: clamp(10px, 1.2vw, 16px) 0 0;
+
+  color: #d8d8d8;
+
+  font-size: clamp(16px, 1.7vw, 22px);
+
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   QUOTE
+========================================================= */
+
+.landing-quote {
+  margin-top: clamp(22px, 3vw, 34px);
+
+  color: #e8b93f;
+
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 600;
+
+  line-height: 1.3;
+  letter-spacing: 0.2px;
+
+  text-shadow:
+    0 0 14px rgba(232, 185, 63, 0.22);
+}
+
+.landing-quote span {
+  font-size: 1.15em;
+}
+
+
+/* =========================================================
+   METAMASK BUTTON
+========================================================= */
+
+.metamask-button {
+  width: min(100%, 440px);
+  min-height: 70px;
+
+  margin: clamp(25px, 3vw, 35px) auto 0;
+
+  padding: 12px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 15px;
+
+  border: 1px solid #00e891;
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00c77d,
+      #007b52
+    );
+
+  color: #ffffff;
+
+  font-size: clamp(17px, 1.8vw, 22px);
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0 12px rgba(0, 255, 153, 0.28),
+    0 0 32px rgba(0, 255, 153, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.metamask-button:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 0 18px rgba(0, 255, 153, 0.42),
+    0 0 42px rgba(0, 255, 153, 0.18);
+}
+
+.metamask-button:active {
+  transform: translateY(0);
+}
+
+.metamask-icon {
+  flex-shrink: 0;
+
+  font-size: 28px;
+  line-height: 1;
+}
+
+.button-arrow {
+  flex-shrink: 0;
+
+  margin-left: 5px;
+
+  font-size: 28px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   TEST NOTE
+========================================================= */
+
+.test-note {
+  margin: 14px 0 0;
+
+  color: #8f8f8f;
+
+  font-size: clamp(13px, 1.4vw, 17px);
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.landing-description {
+  width: min(100%, 900px);
+
+  margin: clamp(48px, 6vw, 70px) auto 0;
+
+  color: #dedede;
+
+  font-size: clamp(16px, 1.7vw, 22px);
+
+  line-height: 1.65;
+
+  text-align: center;
+
+  text-wrap: balance;
+  
+  text-shadow:
+    0 0 7px rgba(255, 255, 255, 0.16),
+    0 0 15px rgba(255, 255, 255, 0.07);
+}
+
+
+/* =========================================================
+   FEATURE GRID
+========================================================= */
+
+.feature-grid {
+  width: 100%;
+
+  margin-top: clamp(38px, 5vw, 58px);
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: clamp(14px, 1.8vw, 22px);
+}
+
+
+/* =========================================================
+   FEATURE CARD
+========================================================= */
+
+.feature-card {
+  min-width: 0;
+  min-height: 205px;
+
+  padding:
+    clamp(22px, 2.5vw, 30px)
+    clamp(16px, 2vw, 24px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  border: 1px solid #292929;
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(19, 19, 19, 0.96),
+      rgba(6, 6, 6, 0.96)
+    );
+
+  box-shadow:
+    inset 0 0 25px rgba(255, 255, 255, 0.012),
+    0 8px 30px rgba(0, 0, 0, 0.3);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(212, 175, 55, 0.45);
+
+  box-shadow:
+    0 12px 35px rgba(212, 175, 55, 0.08);
+}
+
+
+/* =========================================================
+   FEATURE ICON
+========================================================= */
+
+.feature-icon {
+  min-height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #e5b936;
+
+  font-size: clamp(34px, 3.2vw, 43px);
+
+  line-height: 1;
+
+  text-shadow:
+    0 0 14px rgba(229, 185, 54, 0.3);
+}
+
+
+/* =========================================================
+   FEATURE TITLE
+========================================================= */
+
+.feature-card h2 {
+  margin-top: 16px;
+
+  color: #f4f4f4;
+
+  font-size: clamp(17px, 1.7vw, 21px);
+  font-weight: 600;
+
+  line-height: 1.25;
+
+  text-wrap: balance;
+}
+
+
+/* =========================================================
+   FEATURE DESCRIPTION
+========================================================= */
+
+.feature-card p {
+  width: 100%;
+  max-width: 280px;
+
+  margin-top: 11px;
+
+  color: #c8c8c8;
+
+  font-size: clamp(13px, 1.3vw, 16px);
+
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
+
+.landing-glow {
+  position: absolute;
+
+  width: clamp(180px, 28vw, 360px);
+  height: clamp(180px, 28vw, 360px);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  filter: blur(85px);
+
+  opacity: 0.13;
+}
+
+.landing-glow-left {
+  top: 260px;
+  left: -220px;
+
+  background: #d4af37;
+}
+
+.landing-glow-right {
+  top: 380px;
+  right: -220px;
+
+  background: #d4af37;
+}
+
+
+/* =========================================================
+   BACKGROUND PARTICLES
+========================================================= */
+
+.landing-particles {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(255, 196, 65, 0.7) 1px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.45) 1px,
+      transparent 1.5px
+    );
+
+  background-size:
+    150px 180px,
+    220px 240px;
+
+  background-position:
+    20px 30px,
+    90px 110px;
+
+  opacity: 0.2;
+}
+
+
+/* =========================================================
+   FLOATING CRYPTO COINS
+========================================================= */
+
+.crypto-background {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  overflow: hidden;
+}
+
+
+/* Actual transparent PNG coin */
+
+.crypto-coin {
+  position: absolute;
+
+  display: block;
+
+  width: clamp(70px, 7vw, 120px);
+
+  height: auto;
+
+  object-fit: contain;
+
+  opacity: 0.85;
+
+  filter:
+    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.65))
+    drop-shadow(0 0 12px rgba(212, 175, 55, 0.12));
+
+  animation:
+    coin-float 7s ease-in-out infinite,
+    coin-glow 5s ease-in-out infinite;
+
+  will-change: transform;
+}
+
+
+/* =========================================================
+   COIN IMAGE
+========================================================= */
+
+.crypto-coin img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   DESKTOP COIN POSITIONS
+========================================================= */
+
+/* Bitcoin - top left */
+.coin-1 {
+  top: 7%;
+  left: 5%;
+
+  width: clamp(80px, 8vw, 135px);
+
+  transform: rotate(-12deg);
+}
+
+
+/* Ethereum - left middle */
+.coin-2 {
+  top: 25%;
+  left: 1%;
+
+  width: clamp(65px, 6.5vw, 105px);
+
+  animation-delay: -2s;
+}
+
+
+/* BNB - top right */
+.coin-3 {
+  top: 7%;
+  right: 5%;
+
+  width: clamp(80px, 8vw, 135px);
+
+  animation-delay: -1s;
+}
+
+
+/* XRP - right middle */
+.coin-4 {
+  top: 30%;
+  right: 1%;
+
+  width: clamp(65px, 6.5vw, 105px);
+
+  animation-delay: -3s;
+}
+
+
+/* Solana - lower left */
+.coin-5 {
+  top: 62%;
+  left: 4%;
+
+  width: clamp(65px, 6.5vw, 105px);
+
+  animation-delay: -4s;
+}
+
+
+/* Cardano - lower right */
+.coin-6 {
+  top: 63%;
+  right: 4%;
+
+  width: clamp(65px, 6.5vw, 105px);
+
+  animation-delay: -2.5s;
+}
+
+
+/* Dogecoin - bottom left */
+.coin-7 {
+  top: 82%;
+  left: 7%;
+
+  width: clamp(60px, 6vw, 95px);
+
+  animation-delay: -5s;
+}
+
+
+/* Polygon - bottom right */
+.coin-8 {
+  top: 82%;
+  right: 7%;
+
+  width: clamp(60px, 6vw, 95px);
+
+  animation-delay: -1.5s;
+}
+
+
+/* Small Bitcoin behind logo */
+.coin-9 {
+  top: 4%;
+  left: 46%;
+
+  width: 48px;
+
+  opacity: 0.22;
+
+  animation-delay: -3.5s;
+}
+
+
+/* Small Ethereum / background coin */
+.coin-10 {
+  top: 43%;
+  left: 74%;
+
+  width: 45px;
+
+  opacity: 0.18;
+
+  animation-delay: -4.5s;
+}
+
+
+/* =========================================================
+   COIN ANIMATION
+========================================================= */
+
+@keyframes coin-float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(5deg);
+  }
+}
+
+
+@keyframes coin-glow {
+
+  0%,
+  100% {
+    filter:
+      drop-shadow(0 10px 18px rgba(0, 0, 0, 0.65))
+      drop-shadow(0 0 10px rgba(212, 175, 55, 0.10));
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 14px 22px rgba(0, 0, 0, 0.7))
+      drop-shadow(0 0 18px rgba(212, 175, 55, 0.18));
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .landing-content {
+    width: min(850px, calc(100% - 36px));
+  }
+
+  .crypto-coin {
+    opacity: 0.65;
+  }
+
+  .coin-1 {
+    left: -20px;
+  }
+
+  .coin-3 {
+    right: -20px;
+  }
+
+  .coin-4,
+  .coin-5,
+  .coin-6,
+  .coin-7,
+  .coin-8 {
+    display: none;
+  }
+
+  .feature-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .landing-content {
+    width: calc(100% - 28px);
+
+    padding:
+      28px
+      0
+      55px;
+  }
+
+
+  /* Logo */
+
+  .landing-logo {
+    width: 135px;
+  }
+
+
+  /* Title */
+
+  .landing-title {
+    font-size: clamp(34px, 8vw, 48px);
+
+    letter-spacing: -0.8px;
+  }
+
+
+  /* Tagline */
+
+  .landing-tagline {
+    font-size: 16px;
+  }
+
+
+  /* Quote */
+
+  .landing-quote {
+    margin-top: 21px;
+
+    font-size: 21px;
+  }
+
+
+  /* MetaMask */
+
+  .metamask-button {
+    width: min(100%, 420px);
+
+    min-height: 64px;
+
+    margin-top: 26px;
+
+    padding: 10px 17px;
+
+    border-radius: 14px;
+
+    gap: 11px;
+
+    font-size: 17px;
+  }
+
+  .metamask-icon {
+    font-size: 25px;
+  }
+
+  .button-arrow {
+    font-size: 24px;
+  }
+
+
+  /* Test note */
+
+  .test-note {
+    margin-top: 13px;
+
+    font-size: 14px;
+  }
+
+
+  /* Description */
+
+  .landing-description {
+    margin-top: 42px;
+
+    font-size: 16px;
+
+    line-height: 1.65;
+  }
+
+
+  /* Features */
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
+
+    margin-top: 38px;
+  }
+
+  .feature-card {
+    min-height: 175px;
+
+    padding: 23px 18px;
+  }
+
+  .feature-icon {
+    font-size: 36px;
+  }
+
+  .feature-card h2 {
+    font-size: 19px;
+  }
+
+  .feature-card p {
+    font-size: 14px;
+  }
+
+
+  /* =====================================================
+     MOBILE COINS
+  ===================================================== */
+
+  .crypto-coin {
+    opacity: 0.5;
+  }
+
+  .coin-1 {
+    top: 55px;
+    left: -35px;
+
+    width: 72px;
+  }
+
+  .coin-2 {
+    top: 260px;
+    left: -38px;
+
+    width: 55px;
+  }
+
+  .coin-3 {
+    top: 60px;
+    right: -35px;
+
+    width: 72px;
+  }
+
+  .coin-4 {
+    top: 275px;
+    right: -38px;
+
+    width: 55px;
+
+    display: block;
+  }
+
+  .coin-5,
+  .coin-6,
+  .coin-7,
+  .coin-8,
+  .coin-9,
+  .coin-10 {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .landing-content {
+    width: calc(100% - 20px);
+
+    padding-top: 20px;
+  }
+
+  .landing-logo {
+    width: 105px;
+  }
+
+  .landing-title {
+    font-size: 29px;
+
+    letter-spacing: -0.5px;
+  }
+
+  .landing-tagline {
+    font-size: 14px;
+  }
+
+  .landing-quote {
+    font-size: 18px;
+  }
+
+  .metamask-button {
+    min-height: 58px;
+
+    font-size: 15px;
+
+    gap: 8px;
+  }
+
+  .metamask-icon {
+    font-size: 21px;
+  }
+
+  .button-arrow {
+    font-size: 20px;
+  }
+
+  .landing-description {
+    font-size: 14px;
+  }
+
+  .feature-card {
+    min-height: 155px;
+  }
+
+
+  /* Smaller floating coins */
+
+  .coin-1 {
+    left: -40px;
+    width: 62px;
+  }
+
+  .coin-2 {
+    left: -42px;
+    width: 45px;
+  }
+
+  .coin-3 {
+    right: -40px;
+    width: 62px;
+  }
+
+  .coin-4 {
+    right: -42px;
+    width: 45px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .crypto-coin,
+  .feature-card,
+  .metamask-button {
+    animation: none;
+    transition: none;
+  }
+}
