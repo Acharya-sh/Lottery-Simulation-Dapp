@@ -1,0 +1,24 @@
+{
+  "name": "lottery-simulation-dapp",
+  "version": "1.0.0",
+  "description": "Academic Lottery Simulation DApp on Ethereum",
+  "scripts": {
+    "compile": "npx truffle compile",
+    "migrate": "npx truffle migrate --network development",
+    "migrate:sepolia": "npx truffle migrate --network sepolia",
+    "export-abi": "node scripts/export-abi.js",
+    "build-contracts": "npx truffle compile && node scripts/export-abi.js"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "dapp",
+    "lottery"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^2.1.15",
+    "dotenv": "^18.0.0"
+  }
+}

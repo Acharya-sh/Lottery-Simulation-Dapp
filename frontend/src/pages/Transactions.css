@@ -853,3 +853,128 @@
     min-width: 720px;
   }
 }
+
+/* =========================================
+   ON-CHAIN TRANSACTION ENHANCEMENTS
+========================================= */
+
+.transactions-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.transactions-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.transactions-refresh-btn {
+  padding: 6px 14px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 6px;
+  background: rgba(212, 175, 55, 0.06);
+  color: #d4af37;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.transactions-refresh-btn:hover:not(:disabled) {
+  background: #d4af37;
+  color: #050505;
+}
+
+.transactions-refresh-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.transactions-count {
+  color: #d4af37;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.transaction-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(220, 80, 80, 0.4);
+  border-radius: 10px;
+  background: rgba(180, 40, 40, 0.12);
+  color: #ff8080;
+  font-size: 13px;
+}
+
+.transaction-retry-btn {
+  padding: 5px 12px;
+  border: 1px solid #d56c6c;
+  border-radius: 5px;
+  background: transparent;
+  color: #ff8080;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.transaction-retry-btn:hover {
+  background: #d56c6c;
+  color: #fff;
+}
+
+.transaction-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 65px 20px;
+  gap: 16px;
+  color: #888888;
+  font-size: 14px;
+}
+
+.transaction-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(212, 175, 55, 0.15);
+  border-top-color: #d4af37;
+  border-radius: 50%;
+  animation: tx-spin 0.8s linear infinite;
+}
+
+@keyframes tx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.transaction-empty-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.transaction-action-btn {
+  margin-top: 16px;
+  padding: 10px 22px;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  background: #d4af37;
+  color: #050505;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.transaction-action-btn:hover {
+  background: #e6c555;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+}

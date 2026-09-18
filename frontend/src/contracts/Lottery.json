@@ -1,0 +1,548 @@
+{
+  "contractName": "Lottery",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "LotteryCancelled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "LotteryClosed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "prizeName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "entryFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "LotteryCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "LotteryEntered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "winner",
+          "type": "address"
+        }
+      ],
+      "name": "PrizeClaimed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "winner",
+          "type": "address"
+        }
+      ],
+      "name": "WinnerSelected",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "lotteries",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address payable",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "prizeName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "prizeDescription",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "imageURI",
+          "type": "string"
+        },
+        {
+          "internalType": "enum Lottery.PrizeType",
+          "name": "prizeType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "prizeCurrency",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prizeValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ethPrizeAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "organizerContact",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "entryFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxParticipants",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isOpen",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "winnerSelected",
+          "type": "bool"
+        },
+        {
+          "internalType": "address",
+          "name": "winner",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "prizeClaimed",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "cancelled",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "entryFeesCollected",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "lotteryCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_prizeName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_prizeDescription",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_category",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_imageURI",
+          "type": "string"
+        },
+        {
+          "internalType": "enum Lottery.PrizeType",
+          "name": "_prizeType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "_prizeCurrency",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_prizeValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_ethPrizeAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_organizerContact",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_entryFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxParticipants",
+          "type": "uint256"
+        }
+      ],
+      "name": "createLottery",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "enterLottery",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_lotteryId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_winner",
+          "type": "address"
+        }
+      ],
+      "name": "pickWinnerManually",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "pickWinnerRandom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "claimPrize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelLottery",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getParticipants",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLottery",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "prizeName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "prizeDescription",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "imageURI",
+          "type": "string"
+        },
+        {
+          "internalType": "enum Lottery.PrizeType",
+          "name": "prizeType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "prizeCurrency",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prizeValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ethPrizeAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "organizerContact",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "entryFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxParticipants",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "participantCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isOpen",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "winnerSelected",
+          "type": "bool"
+        },
+        {
+          "internalType": "address",
+          "name": "winner",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "prizeClaimed",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "cancelled",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "entryFeesCollected",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "getMyWinnings",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+  ],
+  "networks": {
+    "1337": {
+      "events": {},
+      "links": {},
+      "address": "0xb1611Ddaa4201AdD037Bf4423049e33cdbeD1338",
+      "transactionHash": "0xecdc2af598487c1fe1092f08e824f92e346ad4da927e172c2627f0b38951ff60"
+    },
+    "1788592248030": {
+      "events": {},
+      "links": {},
+      "address": "0xe174FAc661a8f59B76F1B064EF6BDe0B9FFa63B2",
+      "transactionHash": "0x5cf5e14d0fc5a4a6b0f0708853caeeaba26ea981f89aa48b45fbc1617b4e3aaf"
+    },
+    "1788675859504": {
+      "events": {},
+      "links": {},
+      "address": "0x2032dD0fE3aEE0622a4003f293b88fC2bd6b6EaA",
+      "transactionHash": "0x24eb80b39b2855fe8cec06cd371dfe28930c8a66660af31ddaa44b1ccc1aec1b"
+    }
+  },
+  "updatedAt": "2026-09-18T15:50:05.203Z"
+}

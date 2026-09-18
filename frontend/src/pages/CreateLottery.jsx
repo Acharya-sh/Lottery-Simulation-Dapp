@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./CreateLottery.css";
+import { useWeb3 } from "../context/Web3Context";
 
 const cryptoPresets = {
   ETH: {
@@ -22,6 +23,7 @@ const cryptoPresets = {
 };
 
 function CreateLottery() {
+  const { contract, web3, account, isConnected, isCorrectNetwork, refreshBalance } = useWeb3();
 
   const [prizeName, setPrizeName] = useState("");
   const [description, setDescription] = useState("");
@@ -44,6 +46,11 @@ function CreateLottery() {
 
   const [imagePreview, setImagePreview] =
     useState(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [txStatus, setTxStatus] = useState(null); // null | "waiting-metamask" | "mining" | "success" | "error"
+  const [txHash, setTxHash] = useState(null);
+  const [formError, setFormError] = useState(null);
 
 
   /* =========================================
@@ -97,20 +104,22 @@ function CreateLottery() {
   ========================================= */
 
   const handleReset = () => {
-
     setPrizeName("");
     setDescription("");
-    setCategory("");
-    setPrizeType("");
+    setCategory("Technology");
+    setPrizeType("physical");
     setPrizeValue("");
-    setPrizeCurrency("");
-    setCryptoType("");
+    setPrizeCurrency("USD");
+    setCryptoType("ETH");
     setEthAmount("");
     setEntryFee("");
     setMaxParticipants("");
     setOrganizerContact("");
     setImagePreview(null);
-
+    setIsSubmitting(false);
+    setTxStatus(null);
+    setTxHash(null);
+    setFormError(null);
   };
 
 
@@ -207,13 +216,140 @@ function CreateLottery() {
      CREATE LOTTERY
   ========================================= */
 
-  const handleCreateLottery = (event) => {
-
+  const handleCreateLottery = async (event) => {
     event.preventDefault();
+    setFormError(null);
 
-    alert(
-      "UI demo only: the blockchain transaction will be connected later."
-    );
+    if (!isConnected) {
+      setFormError("Please connect your MetaMask wallet before creating a lottery.");
+      return;
+    }
+
+    if (!isCorrectNetwork) {
+      setFormError("Please switch your wallet to a supported network (Ganache Local 1337 or Sepolia).");
+      return;
+    }
+
+    if (!contract || !web3) {
+      setFormError("Smart contract is not available on this network.");
+      return;
+    }
+
+    // Validations
+    if (!prizeName.trim()) {
+      setFormError("Prize name is required.");
+      return;
+    }
+
+    if (!description.trim()) {
+      setFormError("Prize description is required.");
+      return;
+    }
+
+    if (!organizerContact.trim()) {
+      setFormError("Organizer contact information is required.");
+      return;
+    }
+
+    const feeNum = parseFloat(entryFee);
+    if (isNaN(feeNum) || feeNum <= 0) {
+      setFormError("Entry fee must be a valid number greater than 0 ETH.");
+      return;
+    }
+
+    const maxPartsNum = parseInt(maxParticipants, 10);
+    if (isNaN(maxPartsNum) || maxPartsNum <= 0) {
+      setFormError("Maximum participants must be at least 1.");
+      return;
+    }
+
+    // Determine prize parameters based on prizeType
+    let prizeTypeEnum;
+    let ethPrizeAmountWei = "0";
+    let prizeValueWei;
+    let txValue = "0";
+    let selectedCurrency;
+    let imageURI;
+
+    if (prizeType === "eth") {
+      prizeTypeEnum = 1;
+      selectedCurrency = "ETH";
+      const ethVal = parseFloat(ethAmount);
+      if (isNaN(ethVal) || ethVal <= 0) {
+        setFormError("ETH prize amount must be greater than 0.");
+        return;
+      }
+      ethPrizeAmountWei = web3.utils.toWei(ethAmount.toString(), "ether");
+      prizeValueWei = ethPrizeAmountWei;
+      txValue = ethPrizeAmountWei;
+      imageURI = "preset:eth";
+    } else if (prizeType === "crypto") {
+      prizeTypeEnum = 2;
+      selectedCurrency = cryptoType || "ETH";
+      const valNum = parseFloat(prizeValue);
+      if (isNaN(valNum) || valNum <= 0) {
+        setFormError("Simulated crypto prize value must be greater than 0.");
+        return;
+      }
+      prizeValueWei = Math.round(valNum).toString();
+      imageURI = `preset:${(cryptoType || "eth").toLowerCase()}`;
+    } else {
+      // Physical prize
+      prizeTypeEnum = 0;
+      if (prizeValue && parseFloat(prizeValue) > 0) {
+        prizeValueWei = Math.round(parseFloat(prizeValue)).toString();
+      } else {
+        prizeValueWei = "1";
+      }
+      imageURI = `preset:${(category || "technology").toLowerCase()}`;
+    }
+
+    const entryFeeWei = web3.utils.toWei(entryFee.toString(), "ether");
+
+    setIsSubmitting(true);
+    setTxStatus("waiting-metamask");
+    setTxHash(null);
+
+    try {
+      const txPromise = contract.methods.createLottery(
+        prizeName.trim(),
+        description.trim(),
+        category || "Technology",
+        imageURI,
+        prizeTypeEnum,
+        selectedCurrency,
+        prizeValueWei,
+        ethPrizeAmountWei,
+        organizerContact.trim(),
+        entryFeeWei,
+        maxPartsNum
+      ).send({
+        from: account,
+        value: txValue,
+      });
+
+      txPromise.on("transactionHash", (hash) => {
+        setTxHash(hash);
+        setTxStatus("mining");
+      });
+
+      const receipt = await txPromise;
+      setTxHash(receipt.transactionHash);
+      setTxStatus("success");
+      await refreshBalance();
+    } catch (err) {
+      console.error("Failed to create lottery:", err);
+      setTxStatus("error");
+      if (err.code === 4001) {
+        setFormError("Transaction was rejected in MetaMask.");
+      } else if (err.message && err.message.includes("insufficient funds")) {
+        setFormError("Insufficient funds in your wallet to cover the transaction value and gas fee.");
+      } else {
+        setFormError(err.message || "Failed to create lottery on the blockchain.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -248,6 +384,7 @@ function CreateLottery() {
       ====================================== */}
 
       <form
+        id="create-lottery-form"
         className="create-lottery-layout"
         onSubmit={handleCreateLottery}
       >
@@ -1227,6 +1364,56 @@ function CreateLottery() {
 
       </form>
 
+      {/* Transaction Feedback Banner */}
+      {txStatus && (
+        <div className={`tx-status-card ${txStatus}`} style={{ maxWidth: "1200px", margin: "20px auto 0" }}>
+          {txStatus === "waiting-metamask" && (
+            <div>
+              <span className="tx-spinner"></span>
+              <strong>Waiting for MetaMask confirmation...</strong>
+              <p style={{ margin: "4px 0 0", color: "#c8c8c8" }}>
+                Please approve the transaction in your MetaMask wallet.
+              </p>
+            </div>
+          )}
+          {txStatus === "mining" && (
+            <div>
+              <span className="tx-spinner"></span>
+              <strong>Transaction is being mined on the blockchain...</strong>
+              <p style={{ margin: "4px 0 0" }}>
+                Tx Hash: <code>{txHash}</code>
+              </p>
+            </div>
+          )}
+          {txStatus === "success" && (
+            <div>
+              <strong style={{ fontSize: "16px" }}>
+                ✓ Lottery Successfully Created on Blockchain!
+              </strong>
+              <p style={{ margin: "4px 0 0" }}>
+                Your lottery is now live and participants can enter.
+              </p>
+              <p style={{ margin: "4px 0 0" }}>
+                Tx Hash: <code>{txHash}</code>
+              </p>
+            </div>
+          )}
+          {txStatus === "error" && formError && (
+            <div>
+              <strong>⚠️ Creation Failed</strong>
+              <p style={{ margin: "4px 0 0" }}>{formError}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Form Error Banner */}
+      {formError && txStatus !== "error" && (
+        <div className="tx-status-card error" style={{ maxWidth: "1200px", margin: "20px auto 0" }}>
+          <strong>⚠️ Validation Error</strong>
+          <p style={{ margin: "4px 0 0" }}>{formError}</p>
+        </div>
+      )}
 
       {/* =====================================
           BOTTOM ACTIONS
@@ -1238,6 +1425,7 @@ function CreateLottery() {
           type="button"
           className="reset-button"
           onClick={handleReset}
+          disabled={isSubmitting}
         >
           Reset
         </button>
@@ -1245,10 +1433,21 @@ function CreateLottery() {
 
         <button
           type="submit"
+          form="create-lottery-form"
           className="create-button"
+          disabled={isSubmitting}
         >
-          Create Lottery
-          <span>→</span>
+          {isSubmitting ? (
+            <>
+              <span className="tx-spinner"></span>
+              <span>{txStatus === "mining" ? "Mining Tx..." : "Confirming..."}</span>
+            </>
+          ) : (
+            <>
+              Create Lottery
+              <span>→</span>
+            </>
+          )}
         </button>
 
       </div>

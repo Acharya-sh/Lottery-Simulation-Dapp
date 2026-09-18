@@ -584,6 +584,123 @@
   font-size: 9px;
 }
 
+.organizer-contact-locked {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 15px;
+  padding: 14px;
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.organizer-contact-locked span {
+  color: #d4af37;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.organizer-contact-locked small {
+  color: #888;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.eth-claim-note {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 15px;
+  padding: 14px;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.06);
+}
+
+.eth-claim-note span {
+  color: #20d994;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.eth-claim-note small {
+  color: #bbb;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.claim-loading {
+  padding: 70px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.claim-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(212, 175, 55, 0.2);
+  border-top-color: #d4af37;
+  border-radius: 50%;
+  animation: claim-spin 0.8s linear infinite;
+}
+
+@keyframes claim-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.claim-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.claim-modal-action-btn {
+  width: 100%;
+  height: 48px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e6b91e, #cf9e10);
+  color: #050505;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.claim-modal-action-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.claim-modal-action-btn:disabled {
+  background: #252525 !important;
+  color: #777777 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  border: 1px solid #383838 !important;
+}
+
 
 /* =========================================
    TABLET

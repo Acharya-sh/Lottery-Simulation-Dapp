@@ -1,480 +1,330 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import "./Transactions.css";
-
-const transactionData = [
-  {
-    id: 1,
-    date: "06 Sep 2026",
-    time: "14:32",
-    type: "Lottery Entry",
-    icon: "↑",
-    description: "Gaming Laptop",
-    amount: "-0.05 ETH",
-    direction: "sent",
-    status: "SUCCESS",
-    from: "0xA3F2...9D1c",
-    to: "0x7bC4...1e9F",
-    hash: "0x9dE1...4c2B",
-    block: "5864321",
-    gasUsed: "120,432",
-    gasFee: "0.0018 ETH",
-    dateTime: "06 Sep 2026 14:32:18",
-  },
-  {
-    id: 2,
-    date: "05 Sep 2026",
-    time: "11:21",
-    type: "Prize Claim",
-    icon: "↓",
-    description: "ETH Lottery",
-    amount: "+1.00 ETH",
-    direction: "received",
-    status: "SUCCESS",
-    from: "0x81B2...44AC",
-    to: "0xA3F2...9D1c",
-    hash: "0x72FA...91DE",
-    block: "5861204",
-    gasUsed: "86,421",
-    gasFee: "0.0012 ETH",
-    dateTime: "05 Sep 2026 11:21:42",
-  },
-  {
-    id: 3,
-    date: "04 Sep 2026",
-    time: "09:15",
-    type: "Lottery Entry",
-    icon: "↑",
-    description: "PlayStation 5",
-    amount: "-0.03 ETH",
-    direction: "sent",
-    status: "SUCCESS",
-    from: "0xA3F2...9D1c",
-    to: "0x62CA...73AF",
-    hash: "0x31BC...72AE",
-    block: "5859312",
-    gasUsed: "74,215",
-    gasFee: "0.0010 ETH",
-    dateTime: "04 Sep 2026 09:15:21",
-  },
-  {
-    id: 4,
-    date: "03 Sep 2026",
-    time: "18:45",
-    type: "Refund",
-    icon: "↓",
-    description: "Cancelled Lottery",
-    amount: "+0.02 ETH",
-    direction: "received",
-    status: "SUCCESS",
-    from: "0x19FA...73BD",
-    to: "0xA3F2...9D1c",
-    hash: "0x45BC...18DE",
-    block: "5857120",
-    gasUsed: "54,321",
-    gasFee: "0.0007 ETH",
-    dateTime: "03 Sep 2026 18:45:09",
-  },
-  {
-    id: 5,
-    date: "30 Aug 2026",
-    time: "16:20",
-    type: "Lottery Creation",
-    icon: "↑",
-    description: "iPhone 15 Pro Lottery",
-    amount: "-0.004 ETH",
-    direction: "sent",
-    status: "SUCCESS",
-    from: "0xA3F2...9D1c",
-    to: "0xContract...82A1",
-    hash: "0x82DE...18AC",
-    block: "5852011",
-    gasUsed: "160,132",
-    gasFee: "0.004 ETH",
-    dateTime: "30 Aug 2026 16:20:34",
-  },
-  {
-    id: 6,
-    date: "28 Aug 2026",
-    time: "13:10",
-    type: "Prize Claim",
-    icon: "↓",
-    description: "Weekly Lottery",
-    amount: "+2.00 ETH",
-    direction: "received",
-    status: "SUCCESS",
-    from: "0x71AC...18CD",
-    to: "0xA3F2...9D1c",
-    hash: "0x44CD...91FA",
-    block: "5849320",
-    gasUsed: "91,231",
-    gasFee: "0.0013 ETH",
-    dateTime: "28 Aug 2026 13:10:44",
-  },
-  {
-    id: 7,
-    date: "25 Aug 2026",
-    time: "10:05",
-    type: "Lottery Entry",
-    icon: "↑",
-    description: "Nike Air Jordan 1",
-    amount: "-0.05 ETH",
-    direction: "sent",
-    status: "SUCCESS",
-    from: "0xA3F2...9D1c",
-    to: "0x19FA...73BD",
-    hash: "0x62FD...74AC",
-    block: "5845121",
-    gasUsed: "72,421",
-    gasFee: "0.0009 ETH",
-    dateTime: "25 Aug 2026 10:05:17",
-  },
-  {
-    id: 8,
-    date: "20 Aug 2026",
-    time: "21:37",
-    type: "Prize Claim",
-    icon: "↓",
-    description: "Claim Prize",
-    amount: "+1.50 ETH",
-    direction: "received",
-    status: "SUCCESS",
-    from: "0x92EF...44BC",
-    to: "0xA3F2...9D1c",
-    hash: "0x91CE...32AF",
-    block: "5839211",
-    gasUsed: "82,132",
-    gasFee: "0.0011 ETH",
-    dateTime: "20 Aug 2026 21:37:28",
-  },
-];
+import { useWeb3 } from "../context/Web3Context";
+import { fetchUserTransactions } from "../services/lotteryService";
 
 function Transactions() {
+  const {
+    contract,
+    web3,
+    account,
+    isConnected,
+    isCorrectNetwork,
+    connectWallet,
+    switchNetwork,
+  } = useWeb3();
+
+  const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState(null);
+
   const [activeTab, setActiveTab] = useState("all");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
-  const [selectedTransaction, setSelectedTransaction] =
-    useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-  const filteredTransactions = transactionData
-    .filter((transaction) => {
-      const searchText = search.toLowerCase();
+  /* =========================================
+     FETCH ON-CHAIN TRANSACTIONS
+  ========================================= */
+  const loadTransactions = useCallback(async () => {
+    if (!isConnected || !account) {
+      setTransactions([]);
+      setIsLoading(false);
+      setLoadError(null);
+      return;
+    }
 
-      const matchesSearch =
-        transaction.type
-          .toLowerCase()
-          .includes(searchText) ||
-        transaction.description
-          .toLowerCase()
-          .includes(searchText) ||
-        transaction.hash
-          .toLowerCase()
-          .includes(searchText);
+    if (!isCorrectNetwork) {
+      setTransactions([]);
+      setIsLoading(false);
+      setLoadError("Unsupported network. Please switch to Ganache Local (1337) or Sepolia.");
+      return;
+    }
 
-      const matchesTab =
-        activeTab === "all" ||
-        transaction.direction === activeTab;
+    if (!contract || !web3) {
+      setTransactions([]);
+      setIsLoading(false);
+      setLoadError("Lottery smart contract is not available on current network.");
+      return;
+    }
 
-      const matchesType =
-        typeFilter === "all" ||
-        transaction.type === typeFilter;
+    try {
+      setIsLoading(true);
+      setLoadError(null);
+      const data = await fetchUserTransactions(contract, web3, account);
+      setTransactions(data);
+    } catch (err) {
+      console.error("Error fetching transactions:", err);
+      setLoadError(err.message || "Failed to load on-chain transaction history.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [contract, web3, account, isConnected, isCorrectNetwork]);
 
-      return (
-        matchesSearch &&
-        matchesTab &&
-        matchesType
-      );
-    })
-    .sort((a, b) => {
-      if (sortOrder === "newest") {
-        return b.id - a.id;
+  useEffect(() => {
+    let isMounted = true;
+    Promise.resolve().then(() => {
+      if (isMounted) {
+        loadTransactions();
       }
-
-      return a.id - b.id;
     });
+    return () => {
+      isMounted = false;
+    };
+  }, [loadTransactions]);
+
+  /* =========================================
+     COMPUTE SUMMARY STATS
+  ========================================= */
+  const stats = useMemo(() => {
+    let sentSum = 0;
+    let receivedSum = 0;
+
+    transactions.forEach((tx) => {
+      if (tx.direction === "sent" && tx.amountNum) {
+        sentSum += tx.amountNum;
+      } else if (tx.direction === "received" && tx.amountNum) {
+        receivedSum += tx.amountNum;
+      }
+    });
+
+    return {
+      sent: sentSum.toFixed(3),
+      received: receivedSum.toFixed(3),
+      count: transactions.length,
+    };
+  }, [transactions]);
+
+  /* =========================================
+     FILTER & SORT TRANSACTIONS
+  ========================================= */
+  const filteredTransactions = useMemo(() => {
+    return transactions
+      .filter((transaction) => {
+        const searchText = search.toLowerCase().trim();
+
+        const matchesSearch =
+          !searchText ||
+          (transaction.type &&
+            transaction.type.toLowerCase().includes(searchText)) ||
+          (transaction.description &&
+            transaction.description.toLowerCase().includes(searchText)) ||
+          (transaction.hash &&
+            transaction.hash.toLowerCase().includes(searchText)) ||
+          (transaction.from &&
+            transaction.from.toLowerCase().includes(searchText)) ||
+          (transaction.to && transaction.to.toLowerCase().includes(searchText));
+
+        const matchesTab =
+          activeTab === "all" || transaction.direction === activeTab;
+
+        const matchesType =
+          typeFilter === "all" || transaction.type === typeFilter;
+
+        return matchesSearch && matchesTab && matchesType;
+      })
+      .sort((a, b) => {
+        if (sortOrder === "newest") {
+          return (b.timestamp || 0) - (a.timestamp || 0);
+        }
+        return (a.timestamp || 0) - (b.timestamp || 0);
+      });
+  }, [transactions, search, activeTab, typeFilter, sortOrder]);
 
   return (
     <div className="transactions-page">
-
       {/* PAGE HEADER */}
       <div className="transactions-heading">
-
         <div>
-          <h2>
-            Transactions
-          </h2>
-
-          <p>
-            View your complete wallet transaction history.
-          </p>
+          <h2>Transactions</h2>
+          <p>Authentic on-chain transaction history for your connected wallet.</p>
         </div>
 
+        <div className="transactions-heading-actions">
+          <button
+            type="button"
+            className="transactions-refresh-btn"
+            onClick={loadTransactions}
+            disabled={isLoading || !isConnected}
+            title="Refresh transactions from blockchain"
+          >
+            ↻ Refresh
+          </button>
+          <div className="transactions-count">
+            {filteredTransactions.length}{" "}
+            {filteredTransactions.length === 1 ? "Record" : "Records"}
+          </div>
+        </div>
       </div>
-
 
       {/* SUMMARY CARDS */}
       <div className="transaction-summary">
-
         <div className="transaction-stat">
-
-          <div className="transaction-stat-icon">
-            ↑
-          </div>
-
+          <div className="transaction-stat-icon">↑</div>
           <div className="transaction-stat-content">
-
             <span>Total Sent</span>
-
-            <strong>
-              -12.045 ETH
-            </strong>
-
+            <strong>-{stats.sent} ETH</strong>
           </div>
-
         </div>
 
-
         <div className="transaction-stat">
-
-          <div className="transaction-stat-icon">
-            ↓
-          </div>
-
+          <div className="transaction-stat-icon">↓</div>
           <div className="transaction-stat-content">
-
             <span>Total Received</span>
-
-            <strong>
-              +20.02 ETH
-            </strong>
-
+            <strong>+{stats.received} ETH</strong>
           </div>
-
         </div>
-
 
         <div className="transaction-stat">
-
-          <div className="transaction-stat-icon">
-            ▤
-          </div>
-
+          <div className="transaction-stat-icon">▤</div>
           <div className="transaction-stat-content">
-
             <span>Total Transactions</span>
-
-            <strong>
-              28
-            </strong>
-
+            <strong>{stats.count}</strong>
           </div>
-
         </div>
-
       </div>
 
+      {/* ERROR BANNER */}
+      {loadError && isConnected && isCorrectNetwork && (
+        <div className="transaction-error-banner">
+          <span>⚠️ {loadError}</span>
+          <button
+            type="button"
+            className="transaction-retry-btn"
+            onClick={loadTransactions}
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* SENT / RECEIVED TABS */}
       <div className="transaction-tabs">
-
         <button
           type="button"
-          className={
-            activeTab === "all"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setActiveTab("all")
-          }
+          className={activeTab === "all" ? "active" : ""}
+          onClick={() => setActiveTab("all")}
         >
           All
         </button>
 
         <button
           type="button"
-          className={
-            activeTab === "sent"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setActiveTab("sent")
-          }
+          className={activeTab === "sent" ? "active" : ""}
+          onClick={() => setActiveTab("sent")}
         >
           Sent
         </button>
 
         <button
           type="button"
-          className={
-            activeTab === "received"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setActiveTab("received")
-          }
+          className={activeTab === "received" ? "active" : ""}
+          onClick={() => setActiveTab("received")}
         >
           Received
         </button>
-
       </div>
-
 
       {/* FILTERS */}
       <div className="transaction-controls">
-
         <div className="transaction-search">
-
           <span>⌕</span>
-
           <input
             type="text"
-            placeholder="Search transactions..."
+            placeholder="Search by description, type, or hash..."
             value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
+            onChange={(e) => setSearch(e.target.value)}
           />
-
         </div>
-
 
         <select
           value={typeFilter}
-          onChange={(e) =>
-            setTypeFilter(e.target.value)
-          }
+          onChange={(e) => setTypeFilter(e.target.value)}
         >
-          <option value="all">
-            Transaction Type
-          </option>
-
-          <option value="Lottery Entry">
-            Lottery Entry
-          </option>
-
-          <option value="Lottery Creation">
-            Lottery Creation
-          </option>
-
-          <option value="Prize Claim">
-            Prize Claim
-          </option>
-
-          <option value="Refund">
-            Refund
-          </option>
-
+          <option value="all">All Types</option>
+          <option value="Lottery Entry">Lottery Entry</option>
+          <option value="Lottery Creation">Lottery Creation</option>
+          <option value="Prize Claim">Prize Claim</option>
+          <option value="Refund">Refund</option>
+          <option value="Cancellation">Cancellation</option>
         </select>
-
-
-        <select
-          value={dateFilter}
-          onChange={(e) =>
-            setDateFilter(e.target.value)
-          }
-        >
-          <option value="all">
-            Date
-          </option>
-
-          <option value="today">
-            Today
-          </option>
-
-          <option value="week">
-            This Week
-          </option>
-
-          <option value="month">
-            This Month
-          </option>
-
-        </select>
-
 
         <select
           value={sortOrder}
-          onChange={(e) =>
-            setSortOrder(e.target.value)
-          }
+          onChange={(e) => setSortOrder(e.target.value)}
         >
-          <option value="newest">
-            Newest First
-          </option>
-
-          <option value="oldest">
-            Oldest First
-          </option>
-
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
         </select>
-
       </div>
-
 
       {/* MAIN CONTENT */}
       <div className="transaction-content">
-
         {/* TABLE */}
         <div className="transaction-table-wrapper">
+          {!isConnected ? (
+            <div className="transaction-empty">
+              <div className="transaction-empty-icon">🔒</div>
+              <h3>Wallet Not Connected</h3>
+              <p>Connect your MetaMask wallet to view on-chain transactions.</p>
+              <button
+                type="button"
+                className="transaction-action-btn"
+                onClick={connectWallet}
+              >
+                Connect MetaMask
+              </button>
+            </div>
+          ) : !isCorrectNetwork ? (
+            <div className="transaction-empty">
+              <div className="transaction-empty-icon">⚠️</div>
+              <h3>Unsupported Network</h3>
+              <p>Please switch your wallet to Ganache Local (1337) or Sepolia (11155111).</p>
+              <button
+                type="button"
+                className="transaction-action-btn"
+                onClick={() => switchNetwork(1337)}
+              >
+                Switch to Ganache (1337)
+              </button>
+            </div>
+          ) : isLoading ? (
+            <div className="transaction-loading">
+              <div className="transaction-spinner"></div>
+              <p>Fetching on-chain transaction records from blockchain logs...</p>
+            </div>
+          ) : (
+            <table className="transaction-table">
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>TYPE</th>
+                  <th>DESCRIPTION</th>
+                  <th>AMOUNT</th>
+                  <th>STATUS</th>
+                  <th>VIEW</th>
+                </tr>
+              </thead>
 
-          <table className="transaction-table">
-
-            <thead>
-
-              <tr>
-                <th>DATE</th>
-                <th>TYPE</th>
-                <th>DESCRIPTION</th>
-                <th>AMOUNT</th>
-                <th>STATUS</th>
-                <th>VIEW</th>
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              {filteredTransactions.map(
-                (transaction) => (
-
+              <tbody>
+                {filteredTransactions.map((transaction) => (
                   <tr key={transaction.id}>
-
                     <td>
                       <div className="transaction-date">
-
-                        <strong>
-                          {transaction.date}
-                        </strong>
-
-                        <span>
-                          {transaction.time}
-                        </span>
-
+                        <strong>{transaction.date}</strong>
+                        <span>{transaction.time}</span>
                       </div>
                     </td>
 
-
                     <td>
-
                       <span
                         className={`transaction-type ${transaction.direction}`}
                       >
-
-                        <span className="type-icon">
-                          {transaction.icon}
-                        </span>
-
+                        <span className="type-icon">{transaction.icon}</span>
                         {transaction.type}
-
                       </span>
-
                     </td>
-
 
                     <td>
                       <span className="transaction-description">
@@ -482,103 +332,71 @@ function Transactions() {
                       </span>
                     </td>
 
-
                     <td>
-
                       <span
                         className={`transaction-amount ${transaction.direction}`}
                       >
                         {transaction.amount}
                       </span>
-
                     </td>
 
-
                     <td>
-
                       <span className="transaction-status">
-
                         <i />
-
                         SUCCESS
-
                       </span>
-
                     </td>
 
-
                     <td>
-
                       <button
                         type="button"
                         className="transaction-view-button"
-                        onClick={() =>
-                          setSelectedTransaction(
-                            transaction
-                          )
-                        }
+                        onClick={() => setSelectedTransaction(transaction)}
                       >
                         View
                       </button>
-
                     </td>
-
                   </tr>
-
-                )
-              )}
-
-            </tbody>
-
-          </table>
-
-
-          {filteredTransactions.length === 0 && (
-
-            <div className="transaction-empty">
-
-              <div>⌕</div>
-
-              <h3>
-                No transactions found
-              </h3>
-
-              <p>
-                Try changing your search or filters.
-              </p>
-
-            </div>
-
+                ))}
+              </tbody>
+            </table>
           )}
 
+          {isConnected &&
+            isCorrectNetwork &&
+            !isLoading &&
+            filteredTransactions.length === 0 && (
+              <div className="transaction-empty">
+                <div className="transaction-empty-icon">▤</div>
+                <h3>
+                  {transactions.length === 0
+                    ? "No On-Chain Transactions Yet"
+                    : "No matching transactions found"}
+                </h3>
+                <p>
+                  {transactions.length === 0
+                    ? "Create a lottery or enter one to see your on-chain transaction history here."
+                    : "Try changing your search or filters."}
+                </p>
+              </div>
+            )}
         </div>
-
 
         {/* DETAILS PANEL */}
         {selectedTransaction && (
-
           <aside className="transaction-details">
-
             <div className="details-header">
-
-              <h3>
-                TRANSACTION DETAILS
-              </h3>
-
+              <h3>TRANSACTION DETAILS</h3>
               <button
                 type="button"
-                onClick={() =>
-                  setSelectedTransaction(null)
-                }
+                onClick={() => setSelectedTransaction(null)}
+                aria-label="Close details"
               >
                 ×
               </button>
-
             </div>
 
-
             <div className="details-title">
-
               <div
                 className={`details-main-icon ${selectedTransaction.direction}`}
               >
@@ -586,114 +404,75 @@ function Transactions() {
               </div>
 
               <div>
-
-                <h3>
-                  {selectedTransaction.type}
-                </h3>
-
-                <p>
-                  {selectedTransaction.description}
-                </p>
-
+                <h3>{selectedTransaction.type}</h3>
+                <p>{selectedTransaction.description}</p>
               </div>
 
-              <span className="details-success">
-                ● SUCCESS
-              </span>
-
+              <span className="details-success">● SUCCESS</span>
             </div>
 
-
             <div className="details-list">
-
               <div className="details-row">
                 <span>Transaction Type</span>
-                <strong>
-                  {selectedTransaction.type}
-                </strong>
+                <strong>{selectedTransaction.type}</strong>
               </div>
 
               <div className="details-row">
                 <span>Amount</span>
-                <strong
-                  className={
-                    selectedTransaction.direction
-                  }
-                >
+                <strong className={selectedTransaction.direction}>
                   {selectedTransaction.amount}
                 </strong>
               </div>
 
               <div className="details-row">
                 <span>Status</span>
-                <strong className="success-text">
-                  ● Success
-                </strong>
+                <strong className="success-text">● Confirmed on Chain</strong>
               </div>
 
               <div className="details-row">
                 <span>From Address</span>
-                <strong>
+                <strong style={{ wordBreak: "break-all", fontFamily: "monospace", fontSize: "11px" }}>
                   {selectedTransaction.from}
                 </strong>
               </div>
 
               <div className="details-row">
                 <span>To Address</span>
-                <strong>
+                <strong style={{ wordBreak: "break-all", fontFamily: "monospace", fontSize: "11px" }}>
                   {selectedTransaction.to}
                 </strong>
               </div>
 
               <div className="details-row">
                 <span>Transaction Hash</span>
-                <strong>
+                <strong style={{ wordBreak: "break-all", fontFamily: "monospace", fontSize: "11px", color: "#d4af37" }}>
                   {selectedTransaction.hash}
                 </strong>
               </div>
 
               <div className="details-row">
                 <span>Block Number</span>
-                <strong>
-                  {selectedTransaction.block}
-                </strong>
-              </div>
-
-              <div className="details-row">
-                <span>Gas Used</span>
-                <strong>
-                  {selectedTransaction.gasUsed}
-                </strong>
+                <strong>{selectedTransaction.blockStr}</strong>
               </div>
 
               <div className="details-row">
                 <span>Date & Time</span>
-                <strong>
-                  {selectedTransaction.dateTime}
-                </strong>
+                <strong>{selectedTransaction.dateTime}</strong>
               </div>
-
             </div>
-
 
             <button
               type="button"
               className="details-close-button"
-              onClick={() =>
-                setSelectedTransaction(null)
-              }
+              onClick={() => setSelectedTransaction(null)}
             >
               Close
             </button>
-
           </aside>
-
         )}
-
       </div>
-
     </div>
   );
 }
 
-export default Transactions;
+export default Transactions;

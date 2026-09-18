@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 
+import { Web3Provider, useWeb3 } from "./context/Web3Context";
 import Sidebar from "./components/sidebar";
 import Header from "./components/header";
 
@@ -12,14 +13,14 @@ import Transactions from "./pages/Transactions";
 import ClaimPrize from "./pages/ClaimPrize";
 import Profile from "./pages/Profile";
 
-function App() {
+function AppContent() {
   const [enteredApp, setEnteredApp] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
-
-  // Sidebar open / close state
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isConnected } = useWeb3();
 
-  if (!enteredApp) {
+  // If user has not explicitly entered and is not connected, show Landing
+  if (!enteredApp && !isConnected) {
     return (
       <Landing
         onEnter={() => setEnteredApp(true)}
@@ -75,7 +76,6 @@ function App() {
 
   return (
     <div className="app">
-
       {/* Sidebar */}
       <Sidebar
         currentPage={currentPage}
@@ -86,21 +86,25 @@ function App() {
 
       {/* Main area */}
       <main className="main-content">
-
         <Header
           pageTitle={getPageTitle()}
-          onMenuClick={() =>
-            setSidebarOpen((previous) => !previous)
-          }
+          onMenuClick={() => setSidebarOpen((previous) => !previous)}
+          onNavigate={setCurrentPage}
         />
 
         <section className="page-content">
           {renderPage()}
         </section>
-
       </main>
-
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Web3Provider>
+      <AppContent />
+    </Web3Provider>
   );
 }
 

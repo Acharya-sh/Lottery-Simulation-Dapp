@@ -989,6 +989,353 @@
   font-size: 18px;
 }
 
+.enter-lottery-btn:disabled,
+.enter-lottery-btn.disabled {
+  background: #252525 !important;
+  color: #777777 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border: 1px solid #383838 !important;
+}
+
+.dashboard-loading {
+  width: 100%;
+  padding: 80px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.dashboard-spinner {
+  width: 38px;
+  height: 38px;
+  border: 3px solid rgba(212, 169, 38, 0.2);
+  border-top-color: #e6b91e;
+  border-radius: 50%;
+  animation: dash-spin 0.8s linear infinite;
+}
+
+@keyframes dash-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dashboard-error-banner {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #fca5a5;
+  font-size: 14px;
+}
+
+.dashboard-error-banner button {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.creator-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #e6b91e;
+  background: rgba(212, 169, 38, 0.15);
+  border: 1px solid rgba(212, 169, 38, 0.3);
+  border-radius: 6px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.refresh-btn {
+  background: #0e0e0e;
+  border: 1px solid rgba(212, 169, 38, 0.3);
+  color: #e6b91e;
+  border-radius: 8px;
+  padding: 7px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(212, 169, 38, 0.12);
+  border-color: #e6b91e;
+}
+
+/* ================================
+   WINNER ANNOUNCEMENT & SELECTION
+================================ */
+
+.card-winner-preview {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: rgba(230, 185, 30, 0.08);
+  border: 1px solid rgba(230, 185, 30, 0.2);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.card-winner-preview span {
+  color: #a7a7a7;
+}
+
+.card-winner-preview strong {
+  color: #e6b91e;
+  font-family: monospace;
+}
+
+.winner-announcement-card {
+  margin-top: 22px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(230, 185, 30, 0.12), rgba(16, 16, 16, 0.95));
+  border: 1px solid #e6b91e;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(230, 185, 30, 0.15);
+}
+
+.winner-announcement-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.winner-trophy {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.winner-badge-label {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #e6b91e;
+  margin-bottom: 3px;
+}
+
+.winner-address-heading {
+  margin: 0;
+  font-size: 20px;
+  color: #ffffff;
+  font-family: monospace;
+}
+
+.winner-full-address {
+  display: block;
+  font-size: 11px;
+  color: #8c8c8c;
+  word-break: break-all;
+  margin-top: 4px;
+}
+
+.winner-congrats-pill {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  border-radius: 6px;
+  color: #22c55e;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.winner-claim-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  color: #a7a7a7;
+}
+
+.claim-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.claim-status-badge.claimed {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.claim-status-badge.unclaimed {
+  background: rgba(230, 185, 30, 0.15);
+  color: #e6b91e;
+  border: 1px solid rgba(230, 185, 30, 0.3);
+}
+
+.creator-notice-box {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: rgba(212, 169, 38, 0.06);
+  border: 1px solid rgba(212, 169, 38, 0.25);
+  border-radius: 10px;
+  color: #c8c8c8;
+  font-size: 13px;
+}
+
+.creator-notice-box strong {
+  color: #e6b91e;
+}
+
+.winner-selection-box {
+  margin-top: 22px;
+  padding: 20px;
+  background: #0d0d0d;
+  border: 1px solid #282828;
+  border-radius: 12px;
+}
+
+.winner-selection-header {
+  margin-bottom: 14px;
+}
+
+.winner-selection-header h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.winner-selection-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.winner-mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.winner-tab-btn {
+  flex: 1;
+  padding: 10px 14px;
+  background: #181818;
+  border: 1px solid #303030;
+  border-radius: 8px;
+  color: #a7a7a7;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.winner-tab-btn:hover:not(:disabled) {
+  border-color: #555;
+  color: #eee;
+}
+
+.winner-tab-btn.active {
+  background: rgba(230, 185, 30, 0.15);
+  border-color: #e6b91e;
+  color: #e6b91e;
+}
+
+.winner-tab-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.academic-disclaimer {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #8c8c8c;
+  line-height: 1.5;
+}
+
+.manual-select-label {
+  display: block;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.manual-participant-select {
+  width: 100%;
+  height: 46px;
+  background: #141414;
+  border: 1px solid #383838;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 0 12px;
+  font-size: 13px;
+  font-family: inherit;
+  margin-bottom: 14px;
+  box-sizing: border-box;
+}
+
+.manual-participant-select:focus {
+  border-color: #e6b91e;
+  outline: none;
+}
+
+.pick-winner-btn {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e6b91e, #cf9e10);
+  color: #050505;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pick-winner-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.pick-winner-btn:disabled {
+  background: #252525 !important;
+  color: #777777 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  border: 1px solid #383838 !important;
+}
+
 
 /* ================================
    LARGE LAPTOP

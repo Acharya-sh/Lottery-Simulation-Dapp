@@ -26,6 +26,8 @@ contract Lottery {
 
         string prizeName;
         string prizeDescription;
+        string category;
+        string imageURI;
 
         PrizeType prizeType;
 
@@ -112,6 +114,8 @@ contract Lottery {
     function createLottery(
         string memory _prizeName,
         string memory _prizeDescription,
+        string memory _category,
+        string memory _imageURI,
         PrizeType _prizeType,
         string memory _prizeCurrency,
         uint256 _prizeValue,
@@ -182,6 +186,8 @@ contract Lottery {
 
         newLottery.prizeName = _prizeName;
         newLottery.prizeDescription = _prizeDescription;
+        newLottery.category = _category;
+        newLottery.imageURI = _imageURI;
 
         newLottery.prizeType = _prizeType;
         newLottery.prizeCurrency = _prizeCurrency;
@@ -732,6 +738,8 @@ contract Lottery {
             address creator,
             string memory prizeName,
             string memory prizeDescription,
+            string memory category,
+            string memory imageURI,
             PrizeType prizeType,
             string memory prizeCurrency,
             uint256 prizeValue,
@@ -762,6 +770,10 @@ contract Lottery {
             lottery.prizeName,
 
             lottery.prizeDescription,
+
+            lottery.category,
+
+            lottery.imageURI,
 
             lottery.prizeType,
 

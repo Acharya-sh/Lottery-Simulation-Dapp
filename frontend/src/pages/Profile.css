@@ -576,4 +576,170 @@
   .disconnect-button {
     width: 100%;
   }
+
+  .faucet-guide-card {
+    padding: 20px;
+  }
+
+  .faucet-link-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
+/* =========================================
+   REFRESH BUTTON
+========================================= */
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 6px 16px;
+  background: rgba(212, 169, 38, 0.12);
+  border: 1px solid rgba(212, 169, 38, 0.4);
+  border-radius: 20px;
+  color: #e5b83e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: rgba(212, 169, 38, 0.25);
+  border-color: #e5b83e;
+  color: #ffffff;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.refresh-icon {
+  font-size: 15px;
+  display: inline-block;
+}
+
+.refresh-icon.spinning {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   ON-CHAIN STATS GRID
+========================================= */
+
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.stat-tile {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #292929;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f1f1f1;
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #888888;
+}
+
+/* =========================================
+   FAUCET & ACADEMIC GUIDE
+========================================= */
+
+.faucet-guide-card {
+  padding: 24px 34px;
+}
+
+.faucet-guide-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.faucet-guide-badge {
+  background: rgba(212, 169, 38, 0.15);
+  border: 1px solid #d4af37;
+  color: #e5b83e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.faucet-guide-header h3 {
+  color: #f1f1f1;
+  font-size: 18px;
+  margin: 0;
+}
+
+.faucet-guide-desc {
+  color: #999999;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.faucet-guide-desc strong {
+  color: #ffaa00;
+}
+
+.faucet-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.faucet-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #141414;
+  border: 1px solid #333333;
+  color: #dedede;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.faucet-link-btn:hover {
+  background: rgba(212, 169, 38, 0.12);
+  border-color: #d4af37;
+  color: #e5b83e;
+}

@@ -1,217 +1,210 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import "./History.css";
-
-const historyData = [
-  {
-    id: 1,
-    lottery: "Gaming Laptop",
-    category: "Technology",
-    date: "06 Sep 2026",
-    result: "WON",
-    prize: "Gaming Laptop",
-    status: "CLOSED",
-    type: "participated",
-    txHash: "0x8a72...91fd",
-    description:
-      "High-performance gaming laptop with powerful graphics and latest specifications.",
-    entryFee: "0.05 ETH",
-    participants: 99,
-    maxParticipants: 100,
-  },
-  {
-    id: 2,
-    lottery: "PlayStation 5",
-    category: "Gaming",
-    date: "05 Sep 2026",
-    result: "LOST",
-    prize: "—",
-    status: "CLOSED",
-    type: "participated",
-    txHash: "0x31bc...72ae",
-    description:
-      "Next-generation gaming console for an immersive gaming experience.",
-    entryFee: "0.03 ETH",
-    participants: 30,
-    maxParticipants: 30,
-  },
-  {
-    id: 3,
-    lottery: "iPhone 15 Pro",
-    category: "Technology",
-    date: "04 Sep 2026",
-    result: "PENDING",
-    prize: "—",
-    status: "ACTIVE",
-    type: "participated",
-    txHash: "0x92ef...44bc",
-    description:
-      "Premium smartphone with advanced camera and powerful performance.",
-    entryFee: "0.04 ETH",
-    participants: 45,
-    maxParticipants: 80,
-  },
-  {
-    id: 4,
-    lottery: "1 ETH Giveaway",
-    category: "Crypto",
-    date: "03 Sep 2026",
-    result: "WON",
-    prize: "1 ETH",
-    status: "CLOSED",
-    type: "participated",
-    txHash: "0x71ad...91ce",
-    description:
-      "Simulated Ethereum prize for educational blockchain demonstration.",
-    entryFee: "0.01 ETH",
-    participants: 25,
-    maxParticipants: 25,
-  },
-  {
-    id: 5,
-    lottery: "MacBook Air",
-    category: "Technology",
-    date: "02 Sep 2026",
-    result: "—",
-    prize: "—",
-    status: "ACTIVE",
-    type: "created",
-    txHash: "0x55bc...82de",
-    description:
-      "Powerful, portable and lightweight MacBook Air for everyday use.",
-    entryFee: "0.02 ETH",
-    participants: 18,
-    maxParticipants: 50,
-  },
-  {
-    id: 6,
-    lottery: "AirPods Pro",
-    category: "Technology",
-    date: "31 Aug 2026",
-    result: "—",
-    prize: "—",
-    status: "CLOSED",
-    type: "created",
-    txHash: "0x19fa...73bd",
-    description:
-      "Premium wireless earbuds with active noise cancellation.",
-    entryFee: "0.005 ETH",
-    participants: 100,
-    maxParticipants: 100,
-  },
-];
+import { useWeb3 } from "../context/Web3Context";
+import { fetchUserHistory } from "../services/lotteryService";
 
 function History() {
+  const {
+    contract,
+    web3,
+    account,
+    isConnected,
+    isCorrectNetwork,
+    connectWallet,
+    switchNetwork,
+  } = useWeb3();
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-
   const [selectedLottery, setSelectedLottery] = useState(null);
 
-  const filteredHistory = historyData.filter((item) => {
+  const [historyList, setHistoryList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState(null);
+
+  /* =========================================
+     FETCH ON-CHAIN HISTORY
+  ========================================= */
+  const fetchHistory = useCallback(async () => {
+    if (!isConnected || !account) {
+      setHistoryList([]);
+      setIsLoading(false);
+      setLoadError(null);
+      return;
+    }
+
+    if (!isCorrectNetwork) {
+      setHistoryList([]);
+      setIsLoading(false);
+      setLoadError("Unsupported network. Please switch to Ganache Local (1337) or Sepolia.");
+      return;
+    }
+
+    if (!contract) {
+      setHistoryList([]);
+      setIsLoading(false);
+      setLoadError("Lottery smart contract is not available on current network.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setLoadError(null);
+      const data = await fetchUserHistory(contract, web3, account);
+      setHistoryList(data);
+    } catch (err) {
+      console.error("Error fetching user history:", err);
+      setLoadError(err.message || "Failed to load on-chain lottery history.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [contract, web3, account, isConnected, isCorrectNetwork]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    Promise.resolve().then(() => {
+      if (isMounted) {
+        fetchHistory();
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [fetchHistory]);
+
+  /* =========================================
+     COMPUTE SUMMARY STATS
+  ========================================= */
+  const stats = useMemo(() => {
+    let entries = 0;
+    let winnings = 0;
+    let losses = 0;
+    let created = 0;
+
+    historyList.forEach((item) => {
+      if (item.type === "participated") entries++;
+      if (item.result === "WON") winnings++;
+      if (item.result === "LOST") losses++;
+      if (item.type === "created") created++;
+    });
+
+    return { entries, winnings, losses, created };
+  }, [historyList]);
+
+  /* =========================================
+     FILTER & SEARCH RECORDS
+  ========================================= */
+  const filteredHistory = useMemo(() => {
     const searchText = search.toLowerCase().trim();
 
-    const matchesSearch =
-      item.lottery.toLowerCase().includes(searchText) ||
-      item.category.toLowerCase().includes(searchText) ||
-      item.result.toLowerCase().includes(searchText) ||
-      item.prize.toLowerCase().includes(searchText) ||
-      item.status.toLowerCase().includes(searchText);
+    return historyList.filter((item) => {
+      const matchesSearch =
+        !searchText ||
+        (item.lottery && item.lottery.toLowerCase().includes(searchText)) ||
+        (item.category && item.category.toLowerCase().includes(searchText)) ||
+        (item.result && item.result.toLowerCase().includes(searchText)) ||
+        (item.prize && item.prize.toLowerCase().includes(searchText)) ||
+        (item.status && item.status.toLowerCase().includes(searchText)) ||
+        (item.creator && item.creator.toLowerCase().includes(searchText)) ||
+        (item.winner && item.winner.toLowerCase().includes(searchText)) ||
+        String(item.id).includes(searchText);
 
-    let matchesFilter = true;
+      let matchesFilter = true;
 
-    if (filter === "winnings") {
-      matchesFilter = item.result === "WON";
-    }
+      if (filter === "winnings") {
+        matchesFilter = item.result === "WON";
+      } else if (filter === "losses") {
+        matchesFilter = item.result === "LOST";
+      } else if (filter === "my-lotteries") {
+        matchesFilter = item.type === "created";
+      } else if (filter === "participated") {
+        matchesFilter = item.type === "participated";
+      } else if (filter === "active") {
+        matchesFilter = item.status === "ACTIVE";
+      } else if (filter === "closed") {
+        matchesFilter = item.status === "CLOSED";
+      }
 
-    if (filter === "losses") {
-      matchesFilter = item.result === "LOST";
-    }
-
-    if (filter === "my-lotteries") {
-      matchesFilter = item.type === "created";
-    }
-
-    if (filter === "participated") {
-      matchesFilter = item.type === "participated";
-    }
-
-    if (filter === "active") {
-      matchesFilter = item.status === "ACTIVE";
-    }
-
-    if (filter === "closed") {
-      matchesFilter = item.status === "CLOSED";
-    }
-
-    return matchesSearch && matchesFilter;
-  });
+      return matchesSearch && matchesFilter;
+    });
+  }, [historyList, search, filter]);
 
   return (
     <div className="history-page">
-
       {/* PAGE HEADER */}
       <div className="history-heading">
-
         <div>
           <h2>
             Lottery <span>History</span>
           </h2>
-
-          <p>
-            Complete record of your lottery activity.
-          </p>
+          <p>Complete on-chain record of your lottery activity.</p>
         </div>
 
-        <div className="history-count">
-          {filteredHistory.length} Records
+        <div className="history-heading-actions">
+          <button
+            type="button"
+            className="history-refresh-btn"
+            onClick={fetchHistory}
+            disabled={isLoading || !isConnected}
+            title="Refresh history from blockchain"
+          >
+            ↻ Refresh
+          </button>
+          <div className="history-count">
+            {filteredHistory.length} {filteredHistory.length === 1 ? "Record" : "Records"}
+          </div>
         </div>
-
       </div>
-
 
       {/* SUMMARY CARDS */}
       <div className="history-summary">
-
         <div className="history-stat">
           <span>My Entries</span>
-          <strong>12</strong>
+          <strong>{stats.entries}</strong>
           <small>Lotteries participated</small>
         </div>
 
         <div className="history-stat">
           <span>Winnings</span>
-          <strong>3</strong>
+          <strong>{stats.winnings}</strong>
           <small>Lotteries won</small>
         </div>
 
         <div className="history-stat">
           <span>Losses</span>
-          <strong>9</strong>
+          <strong>{stats.losses}</strong>
           <small>Lotteries lost</small>
         </div>
 
         <div className="history-stat">
           <span>My Lotteries</span>
-          <strong>4</strong>
+          <strong>{stats.created}</strong>
           <small>Created by you</small>
         </div>
-
       </div>
 
+      {/* ERROR BANNER */}
+      {loadError && isConnected && isCorrectNetwork && (
+        <div className="history-error-banner">
+          <span>⚠️ {loadError}</span>
+          <button type="button" className="history-retry-btn" onClick={fetchHistory}>
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* CONTROLS */}
       <div className="history-controls">
-
         <div className="history-search">
-
           <span>⌕</span>
-
           <input
             type="text"
-            placeholder="Search lotteries..."
+            placeholder="Search lotteries, categories, status, or addresses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
         </div>
 
         <select
@@ -221,162 +214,161 @@ function History() {
           <option value="all">All Activity</option>
           <option value="winnings">Winnings</option>
           <option value="losses">Losses</option>
-          <option value="my-lotteries">My Lotteries</option>
+          <option value="my-lotteries">My Lotteries (Created)</option>
           <option value="participated">Participated</option>
           <option value="active">Active Lotteries</option>
           <option value="closed">Closed Lotteries</option>
         </select>
-
       </div>
 
-
-      {/* HISTORY TABLE */}
+      {/* HISTORY TABLE CONTAINER */}
       <div className="history-table-wrapper">
-
-        <table className="history-table">
-
-          <thead>
-
-            <tr>
-              <th>#</th>
-              <th>Lottery</th>
-              <th>Entry Date</th>
-              <th>Result</th>
-              <th>Prize</th>
-              <th>Status</th>
-              <th>Transaction</th>
-              <th>View</th>
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {filteredHistory.map((item) => (
-
-              <tr key={item.id}>
-
-                <td className="history-number">
-                  {String(item.id).padStart(2, "0")}
-                </td>
-
-                <td>
-
-                  <div className="history-lottery">
-
-                    <strong>
-                      {item.lottery}
-                    </strong>
-
-                    <span>
-                      {item.category}
-                    </span>
-
-                  </div>
-
-                </td>
-
-                <td>
-                  {item.date}
-                </td>
-
-                <td>
-
-                  {item.result !== "—" && (
-                    <span
-                      className={`result-badge ${item.result.toLowerCase()}`}
-                    >
-                      {item.result}
-                    </span>
-                  )}
-
-                </td>
-
-                <td>
-
-                  <span className="history-prize">
-                    {item.prize}
-                  </span>
-
-                </td>
-
-                <td>
-
-                  <span
-                    className={`status-badge ${item.status.toLowerCase()}`}
-                  >
-                    {item.status}
-                  </span>
-
-                </td>
-
-                <td>
-
-                  <span className="tx-hash">
-                    {item.txHash}
-                  </span>
-
-                </td>
-
-                <td>
-
-                  <button
-                    type="button"
-                    className="history-view-button"
-                    onClick={() => setSelectedLottery(item)}
-                  >
-                    View
-                  </button>
-
-                </td>
-
-              </tr>
-
-            ))}
-
-          </tbody>
-
-        </table>
-
-
-        {/* EMPTY STATE */}
-        {filteredHistory.length === 0 && (
-
+        {/* DISCONNECTED WALLET STATE */}
+        {!isConnected ? (
           <div className="history-empty">
-
-            <div>⌕</div>
-
-            <h3>
-              No records found
-            </h3>
-
-            <p>
-              Try changing your search or filter.
-            </p>
-
+            <div className="history-empty-icon">🔒</div>
+            <h3>Wallet Not Connected</h3>
+            <p>Connect your MetaMask wallet to view your on-chain lottery activity.</p>
+            <button
+              type="button"
+              className="history-action-btn"
+              onClick={connectWallet}
+            >
+              Connect MetaMask
+            </button>
           </div>
+        ) : !isCorrectNetwork ? (
+          /* WRONG NETWORK STATE */
+          <div className="history-empty">
+            <div className="history-empty-icon">⚠️</div>
+            <h3>Unsupported Network</h3>
+            <p>Please switch your wallet to Ganache Local (1337) or Sepolia (11155111).</p>
+            <button
+              type="button"
+              className="history-action-btn"
+              onClick={() => switchNetwork(1337)}
+            >
+              Switch to Ganache (1337)
+            </button>
+          </div>
+        ) : isLoading ? (
+          /* LOADING STATE */
+          <div className="history-loading">
+            <div className="history-spinner"></div>
+            <p>Fetching on-chain lottery records...</p>
+          </div>
+        ) : (
+          <table className="history-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Lottery</th>
+                <th>Date</th>
+                <th>Result</th>
+                <th>Prize</th>
+                <th>Status</th>
+                <th>Transaction</th>
+                <th>View</th>
+              </tr>
+            </thead>
 
+            <tbody>
+              {filteredHistory.map((item) => (
+                <tr key={item.id}>
+                  <td className="history-number">
+                    {String(item.id).padStart(2, "0")}
+                  </td>
+
+                  <td>
+                    <div className="history-lottery">
+                      <strong>{item.lottery}</strong>
+                      <span>{item.category}</span>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span className="history-date">
+                      {item.date || "—"}
+                    </span>
+                  </td>
+
+                  <td>
+                    {item.result !== "—" ? (
+                      <span
+                        className={`result-badge ${item.result.toLowerCase()}`}
+                      >
+                        {item.result}
+                      </span>
+                    ) : (
+                      <span className="result-dash">—</span>
+                    )}
+                  </td>
+
+                  <td>
+                    <span className="history-prize">
+                      {item.prize}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span
+                      className={`status-badge ${item.status.toLowerCase()}`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span className="tx-hash" title={item.rawTxHash || item.txHash}>
+                      {item.txHash}
+                    </span>
+                  </td>
+
+                  <td>
+                    <button
+                      type="button"
+                      className="history-view-button"
+                      onClick={() => setSelectedLottery(item)}
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
 
+        {/* EMPTY SEARCH / EMPTY DATA STATE */}
+        {isConnected && isCorrectNetwork && !isLoading && filteredHistory.length === 0 && (
+          <div className="history-empty">
+            <div className="history-empty-icon">⌕</div>
+            <h3>
+              {historyList.length === 0
+                ? "No Lottery Activity Yet"
+                : "No matching records found"}
+            </h3>
+            <p>
+              {historyList.length === 0
+                ? "You haven't created or participated in any lotteries with this wallet yet."
+                : "Try adjusting your search query or filter."}
+            </p>
+          </div>
+        )}
       </div>
 
-
       {/* =========================================
-          LOTTERY DETAILS POPUP
+          READ-ONLY LOTTERY DETAILS MODAL
       ========================================= */}
-
       {selectedLottery && (
-
         <div
           className="history-modal-overlay"
           onClick={() => setSelectedLottery(null)}
         >
-
           <div
             className="history-modal"
             onClick={(e) => e.stopPropagation()}
           >
-
             {/* CLOSE BUTTON */}
             <button
               type="button"
@@ -387,136 +379,156 @@ function History() {
               ×
             </button>
 
-
             {/* MODAL HEADER */}
             <div className="history-modal-header">
-
               <div>
+                <div className="history-modal-badge-row">
+                  <span className="history-modal-category">
+                    {selectedLottery.category}
+                  </span>
+                  <span className="history-modal-id">
+                    #{String(selectedLottery.id).padStart(3, "0")}
+                  </span>
+                </div>
 
-                <span className="history-modal-category">
-                  {selectedLottery.category}
-                </span>
-
-                <h2>
-                  {selectedLottery.lottery}
-                </h2>
-
-                <p>
-                  {selectedLottery.description}
-                </p>
-
+                <h2>{selectedLottery.lottery}</h2>
+                <p>{selectedLottery.description}</p>
               </div>
-
             </div>
-
 
             {/* LOTTERY INFORMATION */}
             <div className="history-modal-info">
-
               <div className="history-modal-info-item">
-
-                <span>
-                  Prize
-                </span>
-
-                <strong>
-                  {selectedLottery.prize !== "—"
-                    ? selectedLottery.prize
-                    : selectedLottery.lottery}
-                </strong>
-
+                <span>Lottery ID</span>
+                <strong>#{String(selectedLottery.id).padStart(3, "0")}</strong>
               </div>
 
-
               <div className="history-modal-info-item">
-
-                <span>
-                  Entry Fee
-                </span>
-
-                <strong>
-                  {selectedLottery.entryFee}
-                </strong>
-
+                <span>Prize Type</span>
+                <strong>{selectedLottery.prizeType || "Physical Prize"}</strong>
               </div>
 
-
               <div className="history-modal-info-item">
-
-                <span>
-                  Participants
-                </span>
-
+                <span>Prize Value</span>
                 <strong>
-                  {selectedLottery.participants} /{" "}
-                  {selectedLottery.maxParticipants}
+                  {selectedLottery.prizeValueDisplay || selectedLottery.prize || "—"}
                 </strong>
-
               </div>
 
+              <div className="history-modal-info-item">
+                <span>Entry Fee</span>
+                <strong>{selectedLottery.entryFee}</strong>
+              </div>
 
               <div className="history-modal-info-item">
+                <span>Participants</span>
+                <strong>
+                  {selectedLottery.participants} / {selectedLottery.maxParticipants}
+                </strong>
+              </div>
 
-                <span>
-                  Status
-                </span>
-
+              <div className="history-modal-info-item">
+                <span>Lottery Status</span>
                 <strong
                   className={
                     selectedLottery.status === "ACTIVE"
                       ? "modal-active"
+                      : selectedLottery.status === "CANCELLED"
+                      ? "modal-cancelled"
                       : "modal-closed"
                   }
                 >
                   {selectedLottery.status}
                 </strong>
-
               </div>
 
-
               <div className="history-modal-info-item">
-
-                <span>
-                  Entry Date
-                </span>
-
-                <strong>
-                  {selectedLottery.date}
+                <span>Your Role</span>
+                <strong style={{ textTransform: "capitalize" }}>
+                  {selectedLottery.type === "created"
+                    ? "Organizer (Creator)"
+                    : "Participant"}
                 </strong>
-
               </div>
 
-
               <div className="history-modal-info-item">
-
-                <span>
-                  Result
-                </span>
-
+                <span>Your Result</span>
                 <strong
                   className={
                     selectedLottery.result === "WON"
                       ? "modal-won"
                       : selectedLottery.result === "LOST"
                       ? "modal-lost"
-                      : "modal-pending"
+                      : selectedLottery.result === "PENDING"
+                      ? "modal-pending"
+                      : "modal-neutral"
                   }
                 >
                   {selectedLottery.result}
                 </strong>
-
               </div>
 
+              <div className="history-modal-info-item">
+                <span>Date</span>
+                <strong>{selectedLottery.date || "—"}</strong>
+              </div>
+
+              {selectedLottery.result === "WON" && (
+                <div className="history-modal-info-item">
+                  <span>Claim Status</span>
+                  <strong
+                    className={
+                      selectedLottery.claimStatus === "CLAIMED"
+                        ? "modal-won"
+                        : "modal-pending"
+                    }
+                  >
+                    {selectedLottery.claimStatus}
+                  </strong>
+                </div>
+              )}
+
+              <div
+                className="history-modal-info-item history-modal-full-width"
+              >
+                <span>Creator Address</span>
+                <strong className="history-modal-address">
+                  {selectedLottery.creator}
+                </strong>
+              </div>
+
+              {selectedLottery.winnerSelected && selectedLottery.winner && (
+                <div
+                  className="history-modal-info-item history-modal-full-width"
+                >
+                  <span>Winner Address</span>
+                  <strong className="history-modal-address modal-winner-addr">
+                    {selectedLottery.winner}
+                  </strong>
+                </div>
+              )}
+
+              {selectedLottery.rawTxHash && (
+                <div
+                  className="history-modal-info-item history-modal-full-width"
+                >
+                  <span>Transaction Hash</span>
+                  <strong className="history-modal-address" style={{ color: "#d4af37" }}>
+                    {selectedLottery.rawTxHash}
+                  </strong>
+                </div>
+              )}
             </div>
 
+            {/* READ-ONLY FOOTER NOTICE */}
+            <div className="history-modal-footer-notice">
+              <span>ℹ️ Historical on-chain record (Read-Only)</span>
+            </div>
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }
 
-export default History;
+export default History;

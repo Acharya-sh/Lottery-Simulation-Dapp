@@ -1,6 +1,8 @@
 import "./Landing.css";
+import { useWeb3 } from "../context/Web3Context";
 
 function Landing({ onEnter }) {
+  const { connectWallet, isConnecting, error } = useWeb3();
   const features = [
     {
       icon: "⬡",
@@ -162,15 +164,24 @@ function Landing({ onEnter }) {
         {/* Connect MetaMask */}
         <button
           className="metamask-button"
-          onClick={onEnter}
+          onClick={async () => {
+            await connectWallet();
+            onEnter();
+          }}
+          disabled={isConnecting}
         >
           <span className="metamask-icon">🦊</span>
 
-          <span>Connect MetaMask</span>
+          <span>{isConnecting ? "Connecting..." : "Connect MetaMask"}</span>
 
           <span className="button-arrow">→</span>
         </button>
 
+        {error && (
+          <p className="landing-error" style={{ color: "#ff6b6b", marginTop: "10px", fontSize: "14px" }}>
+            {error}
+          </p>
+        )}
 
         {/* Test cryptocurrency note */}
         <p className="test-note">
