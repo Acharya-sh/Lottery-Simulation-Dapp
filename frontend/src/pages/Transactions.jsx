@@ -281,13 +281,23 @@ function Transactions() {
               <div className="transaction-empty-icon">⚠️</div>
               <h3>Unsupported Network</h3>
               <p>Please switch your wallet to Ganache Local (1337) or Sepolia (11155111).</p>
-              <button
-                type="button"
-                className="transaction-action-btn"
-                onClick={() => switchNetwork(1337)}
-              >
-                Switch to Ganache (1337)
-              </button>
+              <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap", marginTop: "12px" }}>
+                <button
+                  type="button"
+                  className="transaction-action-btn"
+                  onClick={() => switchNetwork(11155111)}
+                  style={{ background: "#d4af37", color: "#050505" }}
+                >
+                  Switch to Sepolia (11155111)
+                </button>
+                <button
+                  type="button"
+                  className="transaction-action-btn"
+                  onClick={() => switchNetwork(1337)}
+                >
+                  Switch to Ganache (1337)
+                </button>
+              </div>
             </div>
           ) : isLoading ? (
             <div className="transaction-loading">
@@ -384,7 +394,13 @@ function Transactions() {
 
         {/* DETAILS PANEL */}
         {selectedTransaction && (
-          <aside className="transaction-details">
+          <>
+            <div
+              className="transaction-details-overlay"
+              onClick={() => setSelectedTransaction(null)}
+              aria-hidden="true"
+            />
+            <aside className="transaction-details">
             <div className="details-header">
               <h3>TRANSACTION DETAILS</h3>
               <button
@@ -469,7 +485,8 @@ function Transactions() {
               Close
             </button>
           </aside>
-        )}
+        </>
+      )}
       </div>
     </div>
   );

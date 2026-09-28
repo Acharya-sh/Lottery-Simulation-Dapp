@@ -52,8 +52,8 @@ function Header({ pageTitle, onMenuClick, onNavigate }) {
 
   const handleWalletClick = () => {
     if (!isCorrectNetwork && isConnected) {
-      // Prompt switch to local ganache or sepolia
-      switchNetwork(1337);
+      // Prompt switch to Sepolia
+      switchNetwork(11155111);
     } else if (onNavigate) {
       onNavigate("profile");
     }
@@ -113,7 +113,7 @@ function Header({ pageTitle, onMenuClick, onNavigate }) {
             title={
               isCorrectNetwork
                 ? `${networkName} • ${account} (Click to view profile)`
-                : "Unsupported network - click to switch to Ganache"
+                : "Unsupported network - click to switch to Sepolia"
             }
             role="button"
             tabIndex={0}

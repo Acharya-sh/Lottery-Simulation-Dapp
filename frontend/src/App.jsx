@@ -12,18 +12,32 @@ import History from "./pages/History";
 import Transactions from "./pages/Transactions";
 import ClaimPrize from "./pages/ClaimPrize";
 import Profile from "./pages/Profile";
-
 function AppContent() {
-  const [enteredApp, setEnteredApp] = useState(false);
+  const [enteredApp, setEnteredApp] = useState(() => {
+    try {
+      return sessionStorage.getItem("entered_app") === "true";
+    } catch {
+      return false;
+    }
+  });
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isConnected } = useWeb3();
+
+  const handleEnter = () => {
+    try {
+      sessionStorage.setItem("entered_app", "true");
+    } catch {
+      // ignore
+    }
+    setEnteredApp(true);
+  };
 
   // If user has not explicitly entered and is not connected, show Landing
   if (!enteredApp && !isConnected) {
     return (
       <Landing
-        onEnter={() => setEnteredApp(true)}
+        onEnter={handleEnter}
       />
     );
   }

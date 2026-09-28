@@ -14,7 +14,11 @@ export const SUPPORTED_CHAINS = {
     hexId: "0xaa36a7",
     name: "Sepolia Testnet",
     currency: "SepoliaETH",
-    rpcUrls: ["https://rpc.sepolia.org"],
+    rpcUrls: [
+      "https://ethereum-sepolia-rpc.publicnode.com",
+      "https://rpc.sepolia.org",
+      "https://rpc2.sepolia.org",
+    ],
     blockExplorerUrls: ["https://sepolia.etherscan.io"],
   },
 };

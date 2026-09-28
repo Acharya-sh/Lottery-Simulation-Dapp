@@ -1,10 +1,9 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Web3 from "web3";
 import {
   getNetworkName,
   isSupportedNetwork,
   formatEthBalance,
-  getLotteryContract,
   requestSwitchNetwork,
   SUPPORTED_CHAINS,
 } from "../services/web3Service";
@@ -20,9 +19,22 @@ export function Web3Provider({ children }) {
   const [networkName, setNetworkName] = useState("Not Connected");
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
-  const [web3Instance, setWeb3Instance] = useState(null);
 
   const isMetaMaskInstalled = typeof window !== "undefined" && Boolean(window.ethereum);
+
+  // Keep a ref to the latest account to avoid stale closures in listeners
+  const accountRef = useRef(account);
+  useEffect(() => {
+    accountRef.current = account;
+  }, [account]);
+
+  // Stable singleton Web3 instance created once
+  const web3Instance = useMemo(() => {
+    if (typeof window !== "undefined" && window.ethereum) {
+      return new Web3(window.ethereum);
+    }
+    return null;
+  }, []);
 
   // Check if current network has a deployed contract address or is supported
   const isCorrectNetwork = useMemo(() => {
@@ -30,12 +42,7 @@ export function Web3Provider({ children }) {
     return isSupportedNetwork(chainId);
   }, [chainId]);
 
-  // Derive contract instance whenever web3Instance or chainId changes
-  const contract = useMemo(() => {
-    if (!web3Instance || !chainId) return null;
-    return getLotteryContract(web3Instance, chainId);
-  }, [web3Instance, chainId]);
-
+  // Resolve contract address based on current chainId
   const contractAddress = useMemo(() => {
     if (!chainId) return null;
     const numId = Number(chainId);
@@ -47,29 +54,52 @@ export function Web3Provider({ children }) {
     return null;
   }, [chainId]);
 
+  // Derive contract instance ONLY when web3Instance or contractAddress changes
+  const contract = useMemo(() => {
+    if (!web3Instance || !contractAddress) return null;
+    return new web3Instance.eth.Contract(LotteryArtifact.abi, contractAddress);
+  }, [web3Instance, contractAddress]);
+
   /**
-   * Refreshes the active account's balance
+   * Stable balance refresher
    */
   const refreshBalance = useCallback(
-    async (acc = account, web3Inst = web3Instance) => {
-      if (!acc || !web3Inst) return;
+    async (targetAccount = accountRef.current) => {
+      const acc = targetAccount || accountRef.current;
+      if (!acc || !web3Instance) return;
       try {
-        const rawWei = await web3Inst.eth.getBalance(acc);
+        const rawWei = await web3Instance.eth.getBalance(acc);
         setBalanceWei(rawWei.toString());
         setBalance(formatEthBalance(rawWei));
       } catch (err) {
         console.error("Failed to fetch balance:", err);
       }
     },
-    [account, web3Instance]
+    [web3Instance]
   );
 
   /**
-   * Connects MetaMask
+   * Disconnects current wallet state in DApp
+   */
+  const disconnectWallet = useCallback(() => {
+    try {
+      localStorage.setItem("dapp_disconnected", "true");
+    } catch (e) {
+      console.warn("localStorage write failed:", e);
+    }
+    setAccount(null);
+    setBalance("0.00");
+    setBalanceWei("0");
+    setChainId(null);
+    setNetworkName("Not Connected");
+    setError(null);
+  }, []);
+
+  /**
+   * Connects MetaMask explicitly
    */
   const connectWallet = useCallback(async () => {
     if (!isMetaMaskInstalled) {
-      // If mobile device without injected provider, offer to open MetaMask App
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       if (isMobile) {
         const currentUrl = window.location.host + window.location.pathname;
@@ -84,8 +114,12 @@ export function Web3Provider({ children }) {
     setError(null);
 
     try {
-      const web3 = new Web3(window.ethereum);
-      setWeb3Instance(web3);
+      // Clear disconnected flag when user explicitly requests connection
+      try {
+        localStorage.removeItem("dapp_disconnected");
+      } catch (e) {
+        console.warn("localStorage remove failed:", e);
+      }
 
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
@@ -105,7 +139,7 @@ export function Web3Provider({ children }) {
       setChainId(parsedChainId);
       setNetworkName(getNetworkName(parsedChainId));
 
-      await refreshBalance(activeAccount, web3);
+      await refreshBalance(activeAccount);
     } catch (err) {
       console.error("Error connecting wallet:", err);
       if (err.code === 4001) {
@@ -117,18 +151,6 @@ export function Web3Provider({ children }) {
       setIsConnecting(false);
     }
   }, [isMetaMaskInstalled, refreshBalance]);
-
-  /**
-   * Disconnects current wallet state in DApp
-   */
-  const disconnectWallet = useCallback(() => {
-    setAccount(null);
-    setBalance("0.00");
-    setBalanceWei("0");
-    setChainId(null);
-    setNetworkName("Not Connected");
-    setError(null);
-  }, []);
 
   /**
    * Switches network to a target supported chain
@@ -147,17 +169,24 @@ export function Web3Provider({ children }) {
     }
   }, []);
 
-  // Listen to MetaMask events (accountsChanged, chainChanged)
+  // Listen to MetaMask events (accountsChanged, chainChanged) and initial auto-detection
   useEffect(() => {
     if (!window.ethereum) return;
 
     const handleAccountsChanged = (accounts) => {
+      // If user explicitly disconnected in DApp, do not automatically re-login
+      const isDisconnected = localStorage.getItem("dapp_disconnected") === "true";
+      if (isDisconnected) {
+        return;
+      }
+
       if (!accounts || accounts.length === 0) {
         disconnectWallet();
-      } else if (accounts[0] !== account) {
-        setAccount(accounts[0]);
-        if (web3Instance) {
-          refreshBalance(accounts[0], web3Instance);
+      } else {
+        const nextAccount = accounts[0];
+        if (accountRef.current?.toLowerCase() !== nextAccount.toLowerCase()) {
+          setAccount(nextAccount);
+          refreshBalance(nextAccount);
         }
       }
     };
@@ -166,43 +195,47 @@ export function Web3Provider({ children }) {
       const parsedChainId = parseInt(newChainHex, 16);
       setChainId(parsedChainId);
       setNetworkName(getNetworkName(parsedChainId));
-      if (account && web3Instance) {
-        refreshBalance(account, web3Instance);
+      if (accountRef.current) {
+        refreshBalance(accountRef.current);
       }
     };
 
     window.ethereum.on("accountsChanged", handleAccountsChanged);
     window.ethereum.on("chainChanged", handleChainChanged);
 
-    // If already authorized, softly detect existing connection
-    window.ethereum
-      .request({ method: "eth_accounts" })
-      .then((accounts) => {
-        if (accounts && accounts.length > 0) {
-          const web3 = new Web3(window.ethereum);
-          setWeb3Instance(web3);
-          setAccount(accounts[0]);
-
-          window.ethereum
-            .request({ method: "eth_chainId" })
-            .then((rawChainId) => {
+    // Initial silent detection: ONLY if user has NOT explicitly disconnected
+    const isDisconnected = localStorage.getItem("dapp_disconnected") === "true";
+    if (!isDisconnected) {
+      window.ethereum
+        .request({ method: "eth_accounts" })
+        .then(async (accounts) => {
+          if (accounts && accounts.length > 0) {
+            try {
+              const rawChainId = await window.ethereum.request({
+                method: "eth_chainId",
+              });
               const parsedChainId = parseInt(rawChainId, 16);
               setChainId(parsedChainId);
               setNetworkName(getNetworkName(parsedChainId));
-              refreshBalance(accounts[0], web3);
-            })
-            .catch(console.error);
-        }
-      })
-      .catch(console.error);
+              setAccount(accounts[0]);
+              refreshBalance(accounts[0]);
+            } catch (chainErr) {
+              console.error("Error reading chain ID:", chainErr);
+            }
+          }
+        })
+        .catch((err) => {
+          console.error("Auto-connect check failed:", err);
+        });
+    }
 
     return () => {
-      if (window.ethereum.removeListener) {
+      if (window.ethereum?.removeListener) {
         window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
         window.ethereum.removeListener("chainChanged", handleChainChanged);
       }
     };
-  }, [account, web3Instance, disconnectWallet, refreshBalance]);
+  }, [disconnectWallet, refreshBalance]);
 
   const value = {
     account,

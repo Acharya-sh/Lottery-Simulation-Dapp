@@ -68,6 +68,31 @@
   justify-content: center;
 
   border-bottom: 1px solid rgba(212, 169, 38, 0.12);
+  position: relative;
+}
+
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 169, 38, 0.3);
+  border-radius: 8px;
+  color: #e5b83e;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(212, 169, 38, 0.2);
+  color: #ffffff;
 }
 
 .sidebar-logo {
@@ -212,6 +237,8 @@
   align-items: center;
 
   gap: 20px;
+  min-width: 0;
+  flex: 1;
 }
 
 
@@ -311,6 +338,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 
@@ -708,22 +736,28 @@
 @media (max-width: 767px) {
 
   .sidebar {
-    width: 280px;
+    width: min(280px, 85vw);
+  }
+
+  .sidebar-close-btn {
+    display: flex;
   }
 
   .header {
-    height: 74px;
+    height: 68px;
 
-    padding: 0 16px;
+    padding: 0 14px;
   }
 
   .header-left {
     gap: 10px;
+    min-width: 0;
   }
 
   .menu-button {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
 
     gap: 4px;
 
@@ -731,23 +765,25 @@
   }
 
   .menu-button span {
-    width: 21px;
+    width: 20px;
   }
 
   .header-logo {
-    width: 48px;
-    height: 48px;
+    display: none;
   }
 
   .header h1 {
-    font-size: 24px;
-
+    font-size: clamp(16px, 4vw, 22px);
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
   }
 
   .notification-btn {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
 
     font-size: 16px;
   }
@@ -756,6 +792,7 @@
     padding: 6px 10px;
     gap: 6px;
     font-size: 12px;
+    flex-shrink: 0;
   }
 
   .wallet-network {
@@ -764,17 +801,21 @@
 
   .wallet-address {
     font-size: 12px;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .wallet-pill-btn {
     padding: 6px 10px;
     font-size: 12px;
+    flex-shrink: 0;
   }
 
   .notification-popup {
     position: fixed;
 
-    top: 84px;
+    top: 76px;
     right: 12px;
     left: 12px;
 
@@ -784,20 +825,21 @@
   }
 
   .page-content {
-    min-height: calc(100vh - 74px);
+    min-height: calc(100vh - 68px);
   }
 
 }
 
 
 /* ================================
-   SMALL MOBILE
+   SMALL MOBILE (<= 480px, 320px - 430px)
 ================================ */
 
 @media (max-width: 480px) {
 
   .header {
     padding: 0 10px;
+    height: 64px;
   }
 
   .header-left {
@@ -810,37 +852,64 @@
 
   .wallet-pill {
     padding: 5px 8px;
+    gap: 4px;
   }
 
   .wallet-address {
-    max-width: 82px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 68px;
+    font-size: 11px;
   }
 
   .menu-button {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
 
   .menu-button span {
-    width: 20px;
-  }
-
-  .header-logo {
-    width: 43px;
-    height: 43px;
+    width: 18px;
   }
 
   .header h1 {
-    font-size: 20px;
+    font-size: 17px;
   }
 
   .notification-btn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
 
+  .page-content {
+    min-height: calc(100vh - 64px);
+  }
+
+}
+
+@media (max-width: 360px) {
+
+  .header {
+    padding: 0 6px;
+  }
+
+  .header-left {
+    gap: 6px;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+
+  .header h1 {
     font-size: 15px;
+  }
+
+  .wallet-pill {
+    padding: 4px 6px;
+  }
+
+  .wallet-address {
+    max-width: 52px;
+    font-size: 10px;
   }
 
 }

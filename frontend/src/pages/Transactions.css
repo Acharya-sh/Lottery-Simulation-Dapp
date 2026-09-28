@@ -769,6 +769,18 @@
 
     overflow-y: auto;
   }
+
+  .transaction-details-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 999;
+  }
+}
+
+.transaction-details-overlay {
+  display: none;
 }
 
 

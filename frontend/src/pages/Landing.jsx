@@ -177,6 +177,38 @@ function Landing({ onEnter }) {
           <span className="button-arrow">→</span>
         </button>
 
+        <button
+          type="button"
+          onClick={onEnter}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            background: "transparent",
+            border: "1px solid rgba(212, 169, 38, 0.4)",
+            borderRadius: "12px",
+            color: "#e5b83e",
+            padding: "10px 22px",
+            fontSize: "14px",
+            fontWeight: "600",
+            cursor: "pointer",
+            marginTop: "12px",
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(212, 169, 38, 0.12)";
+            e.currentTarget.style.borderColor = "#e5b83e";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.borderColor = "rgba(212, 169, 38, 0.4)";
+          }}
+        >
+          <span>Explore Lotteries (Read-Only)</span>
+          <span>→</span>
+        </button>
+
         {error && (
           <p className="landing-error" style={{ color: "#ff6b6b", marginTop: "10px", fontSize: "14px" }}>
             {error}

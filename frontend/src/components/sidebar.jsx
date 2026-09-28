@@ -50,13 +50,21 @@ function Sidebar({ currentPage, onNavigate, isOpen, onClose }) {
 
       <aside className={`sidebar ${isOpen ? "sidebar-open" : ""}`}>
 
-        {/* Logo */}
+        {/* Logo & Close Button */}
         <div className="logo-area">
           <img
             src="/logo_lsd.png"
             alt="LSD Lottery Simulation DApp"
             className="sidebar-logo"
           />
+          <button
+            type="button"
+            className="sidebar-close-btn"
+            onClick={onClose}
+            aria-label="Close sidebar navigation"
+          >
+            ×
+          </button>
         </div>
 
         {/* Navigation */}

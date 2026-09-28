@@ -742,4 +742,45 @@
   background: rgba(212, 169, 38, 0.12);
   border-color: #d4af37;
   color: #e5b83e;
+}
+
+/* =========================================
+   SMALL MOBILE BREAKPOINTS
+========================================= */
+
+@media (max-width: 480px) {
+  .connected-wallet {
+    padding: 18px 16px;
+  }
+
+  .balance-card,
+  .info-card,
+  .address-card,
+  .faucet-guide-card {
+    padding: 18px 16px;
+  }
+
+  .faucet-link-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .profile-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wallet-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .wallet-icon span {
+    font-size: 30px;
+  }
+
+  .balance-value strong {
+    font-size: 20px;
+  }
 }

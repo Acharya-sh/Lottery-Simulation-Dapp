@@ -764,3 +764,30 @@
     text-align: left;
   }
 }
+
+@media (max-width: 480px) {
+  .claim-page {
+    padding: 20px 12px 35px;
+  }
+
+  .claim-heading h2 {
+    font-size: 26px;
+  }
+
+  .prize-image {
+    height: 165px;
+  }
+
+  .modal-prize-card {
+    width: min(500px, calc(100vw - 20px));
+    max-height: calc(100vh - 20px);
+  }
+
+  .modal-prize-image {
+    height: 165px;
+  }
+
+  .modal-prize-content {
+    padding: 15px;
+  }
+}

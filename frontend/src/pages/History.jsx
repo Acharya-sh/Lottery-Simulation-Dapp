@@ -243,13 +243,23 @@ function History() {
             <div className="history-empty-icon">⚠️</div>
             <h3>Unsupported Network</h3>
             <p>Please switch your wallet to Ganache Local (1337) or Sepolia (11155111).</p>
-            <button
-              type="button"
-              className="history-action-btn"
-              onClick={() => switchNetwork(1337)}
-            >
-              Switch to Ganache (1337)
-            </button>
+            <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap", marginTop: "12px" }}>
+              <button
+                type="button"
+                className="history-action-btn"
+                onClick={() => switchNetwork(11155111)}
+                style={{ background: "#d4af37", color: "#050505" }}
+              >
+                Switch to Sepolia (11155111)
+              </button>
+              <button
+                type="button"
+                className="history-action-btn"
+                onClick={() => switchNetwork(1337)}
+              >
+                Switch to Ganache (1337)
+              </button>
+            </div>
           </div>
         ) : isLoading ? (
           /* LOADING STATE */

@@ -99,7 +99,7 @@ function Dashboard() {
       return;
     }
     if (!isCorrectNetwork) {
-      switchNetwork(1337);
+      switchNetwork(11155111);
       return;
     }
     if (!contract || !lottery) return;
@@ -400,10 +400,10 @@ function Dashboard() {
             {!isCorrectNetwork && isConnected && (
               <button
                 type="button"
-                onClick={() => switchNetwork(1337)}
+                onClick={() => switchNetwork(11155111)}
                 style={{ background: "#e1b52a", color: "#050505", fontWeight: "600" }}
               >
-                Switch Network
+                Switch to Sepolia
               </button>
             )}
             <button type="button" onClick={loadLotteries}>
@@ -479,7 +479,7 @@ function Dashboard() {
           </div>
 
           {/* Refresh + Sort */}
-          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <div className="lottery-heading-controls">
             <button
               type="button"
               className="refresh-btn"
@@ -1027,9 +1027,9 @@ function Dashboard() {
                   <button
                     type="button"
                     className="enter-lottery-btn"
-                    onClick={() => switchNetwork(1337)}
+                    onClick={() => switchNetwork(11155111)}
                   >
-                    Switch to Supported Network
+                    Switch to Sepolia Testnet
                     <span>→</span>
                   </button>
                 ) : selectedLottery.winnerSelected ? (

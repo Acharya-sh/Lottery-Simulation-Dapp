@@ -186,7 +186,7 @@ function ClaimPrizes() {
             {!isCorrectNetwork && isConnected && (
               <button
                 type="button"
-                onClick={() => switchNetwork(1337)}
+                onClick={() => switchNetwork(11155111)}
                 style={{
                   background: "#e1b52a",
                   color: "#050505",
@@ -197,7 +197,7 @@ function ClaimPrizes() {
                   cursor: "pointer",
                 }}
               >
-                Switch Network
+                Switch to Sepolia
               </button>
             )}
             <button
